@@ -8,7 +8,7 @@ interface BarContextType {
 const BarContext = createContext<BarContextType | null>(null);
 
 export function BarProvider({ children }: { children: ReactNode }) {
-    const [ isPlaying, setIsPlaying ] = useState(true);
+    const [ isPlaying, setIsPlaying ] = useState(false);
 
     return (
         <BarContext.Provider value={{ isPlaying, setIsPlaying,  }}>
