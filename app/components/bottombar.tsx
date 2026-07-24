@@ -35,11 +35,28 @@ export default function Bottombar() {
         return () => clearInterval(intervalId);
     }, []);
 
+    useEffect(() => {
+        function handleKeyDown(event: KeyboardEvent) {
+            // Don't hijack spacebar while typing in inputs/textareas
+            const target = event.target as HTMLElement;
+            if (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable) {
+                return;
+            }
+
+            if (event.code === "Space") {
+                event.preventDefault(); // stops page from scrolling
+                togglePlay(isPlaying, setIsPlaying);
+            }
+        }
+
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [isPlaying]);
+
     return (
         <div className="fixed bottom-0 left-0 w-full z-20 h-[72px] bg-slate-950/85 backdrop-blur-md border-t border-cyan-500/10">
             <div className="flex items-center h-full max-w-[1400px] mx-auto px-5 gap-5">
 
-                {/* Transport control */}
                 <button
                     onClick={() => togglePlay(isPlaying, setIsPlaying)}
                     aria-label={isPlaying ? "Pause" : "Play"}
@@ -80,10 +97,22 @@ export default function Bottombar() {
 
                 <div className="flex-1" />
 
-                {/* Divider */}
-                <div className="hidden sm:block w-px h-8 bg-slate-800" />
+                <div className="hidden sm:block w-px h-8 bg-slate-800" >
+                    <div className="absolute inset-0 overflow-hidden pointer-events-none rain-container" aria-hidden="true">
+                        { isPlaying && Array.from({ length: 5 }).map((_, i) => (
+                            <span
+                                key={i}
+                                className="raindrop"
+                                style={{
+                                    left: `${Math.random() * 100}%`,
+                                    animationDelay: `0s`,
+                                    animationDuration: `${0.5 + Math.random() * 0.5}s`,
+                                }}
+                            />
+                        ))}
+                    </div>
+                </div>
 
-                {/* Data readouts */}
                 <div className="hidden sm:flex items-center gap-6 font-mono text-sm">
                     <div className="text-right">
                         <div className="text-[10px] uppercase tracking-[0.15em] text-slate-500">Temp</div>

@@ -12,7 +12,6 @@ export default function Sidebar() {
 
     return (
         <div>
-            {/* Toggle button */}
             <button
                 onClick={() => toggleSideMenu()}
                 className="absolute top-3 left-3 z-20 flex items-center justify-center w-10 h-10 rounded-md hover:bg-cyan-500/10 transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-400"
@@ -20,17 +19,17 @@ export default function Sidebar() {
             >
                 <div className="w-6 h-5 flex flex-col justify-between">
                     <span
-                        className={`block h-0.5 w-full bg-slate-200 rounded transition-transform duration-300 ${
+                        className={`block h-0.5 w-full bg-slate-800 dark:bg-slate-200 rounded transition-transform duration-300 ${
                             sideMenu ? "rotate-45 translate-y-[9px] bg-cyan-400" : ""
                         }`}
                     />
                     <span
-                        className={`block h-0.5 w-full bg-slate-200 rounded transition-opacity duration-300 ${
+                        className={`block h-0.5 w-full bg-slate-800 dark:bg-slate-200 rounded transition-opacity duration-300 ${
                             sideMenu ? "opacity-0" : "opacity-100"
                         }`}
                     />
                     <span
-                        className={`block h-0.5 w-full bg-slate-200 rounded transition-transform duration-300 ${
+                        className={`block h-0.5 w-full bg-slate-800 dark:bg-slate-200 rounded transition-transform duration-300 ${
                             sideMenu ? "-rotate-45 -translate-y-[9px] bg-cyan-400" : ""
                         }`}
                     />
