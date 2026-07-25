@@ -5,11 +5,13 @@ import PdfUpload from "~/components/pdf-upload";
 import {useRef} from "react";
 import {useBar} from "~/context/bottombar-context";
 import MobileBlockOverlay from "~/components/mobile-overlay";
+import {useTheme} from "~/context/theme-context";
 
 export function Main() {
     const containerRef = useRef<HTMLDivElement>(null);
     const lastSpawn = useRef(0);
     const { isPlaying } = useBar();
+    const { isDark } = useTheme();
     function handlePointerMove(e: React.PointerEvent<HTMLDivElement>) {
         const now = Date.now();
         if (now - lastSpawn.current < 120) return;
@@ -41,7 +43,7 @@ export function Main() {
             <Sidebar />
 
             <div className="relative h-screen flex flex-col min-h-0">
-                { isPlaying &&
+                { isPlaying && isDark &&
                     <div
                         ref={containerRef}
                         onPointerMove={handlePointerMove}
