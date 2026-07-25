@@ -96,7 +96,6 @@ export default function Bottombar() {
                 </div>
 
                 <div className="flex-1" />
-
                 <div className="hidden sm:block w-px h-8 bg-slate-800" >
                     <div className="absolute inset-0 overflow-hidden pointer-events-none rain-container" aria-hidden="true">
                         { isPlaying && Array.from({ length: 5 }).map((_, i) => (
@@ -112,6 +111,7 @@ export default function Bottombar() {
                         ))}
                     </div>
                 </div>
+
 
                 <div className="hidden sm:flex items-center gap-6 font-mono text-sm">
                     <div className="text-right">

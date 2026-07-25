@@ -9,10 +9,9 @@ export function Main() {
     const containerRef = useRef<HTMLDivElement>(null);
     const lastSpawn = useRef(0);
     const { isPlaying } = useBar();
-
-    function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+    function handlePointerMove(e: React.PointerEvent<HTMLDivElement>) {
         const now = Date.now();
-        if (now - lastSpawn.current < 120) return; // throttle: one ripple every 120ms
+        if (now - lastSpawn.current < 120) return;
         lastSpawn.current = now;
 
         const rect = e.currentTarget.getBoundingClientRect();
@@ -46,12 +45,12 @@ export function Main() {
                     <PdfUpload />
                 </div>
                 { isPlaying &&
-                <div
-                    ref={containerRef}
-                    onMouseMove={handleMouseMove}
-                    className="absolute inset-0 overflow-hidden pointer-events-auto"
-                    aria-hidden="true"
-                />
+                    <div
+                        ref={containerRef}
+                        onPointerMove={handlePointerMove}
+                        className="absolute inset-0 overflow-hidden pointer-events-auto touch-none"
+                        aria-hidden="true"
+                    />
                 }
                 <Bottombar />
             </div>
