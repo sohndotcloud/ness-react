@@ -130,7 +130,7 @@ export default function Bottombar() {
 
                 <div className="hidden sm:block w-px h-8 bg-slate-800" />
 
-                <div className="flex-shrink-0">
+                <div className="flex-shrink-0 text-slate-200">
                     <Timer />
                 </div>
             </div>
