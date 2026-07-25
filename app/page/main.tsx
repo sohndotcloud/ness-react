@@ -4,6 +4,7 @@ import UploadPdf from "~/components/upload-pdf";
 import PdfUpload from "~/components/pdf-upload";
 import {useRef} from "react";
 import {useBar} from "~/context/bottombar-context";
+import MobileBlockOverlay from "~/components/mobile-overlay";
 
 export function Main() {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -40,10 +41,6 @@ export function Main() {
             <Sidebar />
 
             <div className="relative h-screen flex flex-col min-h-0">
-                <div className="flex-1 overflow-y-auto pb-[72px]">
-                    <UploadPdf />
-                    <PdfUpload />
-                </div>
                 { isPlaying &&
                     <div
                         ref={containerRef}
@@ -52,6 +49,7 @@ export function Main() {
                         aria-hidden="true"
                     />
                 }
+                <MobileBlockOverlay />
                 <Bottombar />
             </div>
         </main>
