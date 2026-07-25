@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { useBar } from "~/context/bottombar-context";
 import { useUserWeather } from "~/util/useUserWeather";
+import { useTheme } from "~/context/theme-context"; // must expose { isDark: boolean }
 import Timer from '~/components/timer';
-import { useTheme } from "~/context/theme-context";
 
 const STREAMS = {
-    light: { url: "http://stream.sohn.cloud/sun", label: "Sun" },
-    dark: { url: "http://stream.sohn.cloud/rain", label: "Rain" },
+    light: { url: "http://stream.sohn.cloud/rain", label: "Rain" },
+    dark: { url: "http://stream.sohn.cloud/sun", label: "Sun" },
 };
 
 const FADE_DURATION_MS = 2500;
@@ -141,18 +141,18 @@ export default function Bottombar() {
 
                 {/* Status label */}
                 <div className="flex-shrink-0 min-w-0">
-                    <div className="text-[10px] uppercase tracking-[0.15em] text-cyan-600 dark:text-cyan-400/70 font-mono">
+                    <div className="text-[10px] uppercase tracking-[0.15em] text-cyan-400/70 font-mono">
                         {isPlaying ? "Now Playing" : "Paused"}
                     </div>
-                    <div className="text-sm text-slate-700 dark:text-slate-100 font-medium truncate max-w-[160px]">
-                        {currentStream.label}
+                    <div className="text-sm text-slate-100 font-medium truncate max-w-[160px]">
+                        Rain
                     </div>
                 </div>
 
                 <div className="flex-1" />
-                <div className="hidden sm:block relative w-px h-8 bg-slate-800">
+                <div className="hidden sm:block w-px h-8 bg-slate-800" >
                     <div className="absolute inset-0 overflow-hidden pointer-events-none rain-container" aria-hidden="true">
-                        {isPlaying && !isDark && Array.from({ length: 5 }).map((_, i) => (
+                        { isPlaying && Array.from({ length: 5 }).map((_, i) => (
                             <span
                                 key={i}
                                 className="raindrop"
@@ -166,16 +166,17 @@ export default function Bottombar() {
                     </div>
                 </div>
 
+
                 <div className="hidden sm:flex items-center gap-6 font-mono text-sm">
                     <div className="text-right">
-                        <div className="text-[11px] uppercase tracking-[0.15em] text-slate-500">Temp</div>
-                        <div className="text-slate-700 dark:text-slate-200 tabular-nums">
+                        <div className="text-[10px] uppercase tracking-[0.15em] text-slate-500">Temp</div>
+                        <div className="text-slate-200 tabular-nums">
                             {weather?.temperature !== undefined ? `${weather.temperature}°F` : '—'}
                         </div>
                     </div>
                     <div className="text-right">
                         <div className="text-[10px] uppercase tracking-[0.15em] text-slate-500">Time</div>
-                        <div className="text-slate-700 dark:text-slate-200 tabular-nums">
+                        <div className="text-slate-200 tabular-nums">
                             {time ? time.toLocaleTimeString() : '—'}
                         </div>
                     </div>
@@ -183,7 +184,7 @@ export default function Bottombar() {
 
                 <div className="hidden sm:block w-px h-8 bg-slate-800" />
 
-                <div className="flex-shrink-0 text-slate-700 dark:text-slate-200">
+                <div className="flex-shrink-0 text-slate-200 text-right">
                     <Timer />
                 </div>
             </div>
