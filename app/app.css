@@ -62,6 +62,7 @@ body {
     animation: cursor-ripple-expand 0.9s ease-out forwards;
 }
 
+
 @keyframes cursor-ripple-expand {
     from {
         width: 10px;
