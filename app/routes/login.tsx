@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Form, useActionData, useNavigation, redirect } from "react-router";
 import type { Route } from "./+types/login";
 
-const AUTH_ENDPOINT = "http://api.sohn.cloud/auth/login";
+const AUTH_ENDPOINT = "https://api.sohn.cloud/auth/login";
 
 interface ActionData {
     error?: string;
