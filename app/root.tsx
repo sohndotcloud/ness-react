@@ -12,6 +12,7 @@ import "./app.css";
 import {SideBarProvider} from "~/context/sidebar-context";
 import {PdfProvider} from "~/context/pdf-context";
 import {BarProvider} from "~/context/bottombar-context";
+import {ThemeProvider} from "~/context/theme-context";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -46,6 +47,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
+      <ThemeProvider>
       <BarProvider>
       <PdfProvider>
       <SideBarProvider>
@@ -53,6 +55,7 @@ export default function App() {
       </SideBarProvider>
       </PdfProvider>
       </BarProvider>
+      </ThemeProvider>
   );
 }
 

@@ -62,11 +62,8 @@ export default function Timer() {
     };
 
     return (
-        <div className={"flex items-center gap-2 py-2 whitespace-nowrap" + (alarmStatus ? ' alarm' : '')}>
-            <div className="w-[25px]">
-
-            </div>
-            <div className="w-[25px]">
+        <div className={"flex items-center justify-end gap-2 py-2 whitespace-nowrap" + (alarmStatus ? ' alarm' : '')}>
+            <div className="w-[25px] ">
                 {formatTime(remaining)}
             </div>
             <div className="w-[25px]">
@@ -93,9 +90,6 @@ export default function Timer() {
                 Reset
             </button>
 
-            <div className="w-[25px]">
-
-            </div>
         </div>
     );
 }
