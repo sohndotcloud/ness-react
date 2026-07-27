@@ -26,7 +26,6 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
   }
 
   let response: Response;
-  console.log(import.meta.env);
   try {
     response = await fetch(import.meta.env.VITE_API_DOMAIN + REGISTER_ENDPOINT, {
       method: "POST",
