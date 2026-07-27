@@ -7,6 +7,7 @@ import {useBar} from "~/context/bottombar-context";
 import MobileBlockOverlay from "~/components/mobile-overlay";
 import {useTheme} from "~/context/theme-context";
 import DarkModeToggle from "~/components/darkmode";
+import HabitTracker from "~/components/habit-tracker";
 
 export function Main() {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -48,6 +49,7 @@ export function Main() {
                         aria-hidden="true"
                     />
                 }
+                <HabitTracker/>
                 <MobileBlockOverlay />
                 <Bottombar />
             </div>

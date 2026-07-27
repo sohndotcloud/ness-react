@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Form, useActionData, useNavigation, redirect } from "react-router";
 import type { Route } from "./+types/login";
 
-const AUTH_ENDPOINT = "https://api.sohn.cloud/auth/login";
+const AUTH_ENDPOINT = "/auth/login";
 
 interface ActionData {
     error?: string;
@@ -19,7 +19,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
 
     let response: Response;
     try {
-        response = await fetch(AUTH_ENDPOINT, {
+        response = await fetch(import.meta.env.VITE_API_DOMAIN + AUTH_ENDPOINT, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password }),
@@ -42,10 +42,6 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
         return { error: "Login succeeded but no token was returned." };
     }
 
-    // SPA mode has no server, so this runs entirely in the browser — an
-    // httpOnly cookie isn't reachable here. localStorage is the standard
-    // approach for a client-only app; a loader/root component elsewhere in
-    // the app should check for this on load to gate protected routes.
     localStorage.setItem("auth_token", token);
 
     return redirect("/");

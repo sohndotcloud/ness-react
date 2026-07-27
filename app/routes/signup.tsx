@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Form, useActionData, useNavigation, redirect } from "react-router";
 import type {Route} from "../../.react-router/types/app/routes/+types/signup";
 
-const REGISTER_ENDPOINT = "https://api.sohn.cloud/auth/register";
+const REGISTER_ENDPOINT = "/auth/register";
 
 interface ActionData {
   error?: string;
@@ -26,8 +26,9 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
   }
 
   let response: Response;
+  console.log(import.meta.env);
   try {
-    response = await fetch(REGISTER_ENDPOINT, {
+    response = await fetch(import.meta.env.VITE_API_DOMAIN + REGISTER_ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, password }),
@@ -50,8 +51,6 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
     return { error: "Account created but no token was returned." };
   }
 
-  // Same SPA-mode tradeoff as login: no server to set an httpOnly cookie,
-  // so the token goes in localStorage.
   localStorage.setItem("auth_token", token);
 
   return redirect("/");
