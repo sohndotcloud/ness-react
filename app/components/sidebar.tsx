@@ -1,5 +1,6 @@
 import React from "react";
 import { useSideBar } from "~/context/sidebar-context";
+import {redirect, useNavigate} from "react-router";
 
 const NAV_ITEMS = [
     { label: "Library", href: "/library" },
@@ -9,6 +10,12 @@ const NAV_ITEMS = [
 
 export default function Sidebar() {
     const { sideMenu, setSideMenu, toggleSideMenu } = useSideBar();
+    const navigate = useNavigate();
+
+    function endTokenSession() {
+        localStorage.removeItem('token');
+        navigate("/login");
+    }
 
     return (
         <div>
@@ -60,6 +67,9 @@ export default function Sidebar() {
                             ))}
                     </ul>
                 </div>
+                <footer className="fixed bottom-0 right-0 p-2 text-sm text-gray-400">
+                    <a onClick={endTokenSession}>Logout</a>
+                </footer>
             </div>
 
             <div

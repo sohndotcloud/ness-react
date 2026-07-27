@@ -54,128 +54,149 @@ export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
 
     return (
-        <div className="flex min-h-screen w-full flex-col md:flex-row">
-            {/* Branding panel */}
+        <div className="flex min-h-screen w-full" style={{ backgroundColor: "#FAFAF8" }}>
+            {/* Left rail — mirrors the app's sidebar */}
             <div
-                className="relative flex w-full items-center justify-center overflow-hidden px-8 py-16 md:w-1/2 md:py-0"
-                style={{ backgroundColor: "#20232B" }}
+                className="hidden w-64 flex-col justify-between border-r px-6 py-8 md:flex"
+                style={{ borderColor: "#E5E1D8" }}
             >
-                {/* ruled-notebook-page texture */}
-                <div
-                    className="pointer-events-none absolute inset-0 opacity-[0.06]"
-                    style={{
-                        backgroundImage:
-                            "repeating-linear-gradient(to bottom, transparent, transparent 35px, #F7F5F0 35px, #F7F5F0 36px)",
-                    }}
-                />
-                <div
-                    className="pointer-events-none absolute left-16 top-0 hidden h-full w-px md:block"
-                    style={{ backgroundColor: "#D96C4F", opacity: 0.35 }}
-                />
+                <div>
+                    <div className="flex items-center gap-2">
+                        <div
+                            className="flex h-8 w-8 items-center justify-center rounded-md"
+                            style={{ backgroundColor: "#20232B" }}
+                        >
+                            <span className="text-sm font-semibold" style={{ color: "#F2C14E" }}>
+                                N
+                            </span>
+                        </div>
+                        <span
+                            className="text-lg font-semibold"
+                            style={{ color: "#20232B", fontFamily: "'Fraunces', Georgia, serif" }}
+                        >
+                            Ness
+                        </span>
+                    </div>
 
-                <div className="relative z-10 max-w-sm">
                     <p
-                        className="mb-3 text-xs font-medium uppercase tracking-[0.25em]"
-                        style={{ color: "#F2C14E" }}
+                        className="mt-10 text-xs font-medium uppercase tracking-[0.2em]"
+                        style={{ color: "#9CA3AF", fontFamily: "ui-monospace, monospace" }}
                     >
-                        Welcome back
+                        Your library
                     </p>
-                    <h1
-                        className="text-4xl font-semibold leading-tight md:text-5xl"
-                        style={{ color: "#F7F5F0", fontFamily: "'Fraunces', Georgia, serif" }}
-                    >
-                        notebook
-                        <span style={{ color: "#F2C14E" }}>.</span>
-                        focus
-                    </h1>
-                    <p className="mt-5 text-base leading-relaxed" style={{ color: "#B9BEC9" }}>
-                        Every PDF, one shelf, no distractions. Pick up your reading exactly
-                        where the margin note left off.
+                    <p className="mt-2 text-sm leading-relaxed" style={{ color: "#6B7280" }}>
+                        Every PDF, one shelf, no distractions. Pick up exactly where the
+                        margin note left off.
                     </p>
                 </div>
+
+                <p
+                    className="text-xs uppercase tracking-[0.2em]"
+                    style={{ color: "#B9BEC9", fontFamily: "ui-monospace, monospace" }}
+                >
+                    v1.0
+                </p>
             </div>
 
-            {/* Form panel */}
-            <div
-                className="flex w-full items-center justify-center px-6 py-16 md:w-1/2"
-                style={{ backgroundColor: "#FAFAF8" }}
-            >
+            {/* Main panel — card-based, matches dashboard content area */}
+            <div className="flex flex-1 items-center justify-center px-6 py-16">
                 <div className="w-full max-w-sm">
-                    <h2 className="text-2xl font-semibold" style={{ color: "#20232B" }}>
+                    <p
+                        className="mb-2 text-xs font-medium uppercase tracking-[0.2em]"
+                        style={{ color: "#9CA3AF", fontFamily: "ui-monospace, monospace" }}
+                    >
+                        Sign in
+                    </p>
+                    <h2
+                        className="text-2xl font-semibold"
+                        style={{ color: "#20232B", fontFamily: "'Fraunces', Georgia, serif" }}
+                    >
                         Log in
                     </h2>
                     <p className="mt-1 text-sm" style={{ color: "#6B7280" }}>
                         Enter your details to open your library.
                     </p>
 
-                    <Form method="post" className="mt-8 space-y-5">
-                        <div>
-                            <label
-                                htmlFor="email"
-                                className="mb-1.5 block text-sm font-medium"
-                                style={{ color: "#374151" }}
-                            >
-                                Email
-                            </label>
-                            <input
-                                id="email"
-                                name="email"
-                                type="email"
-                                autoComplete="email"
-                                required
-                                className="w-full rounded-md border px-3 py-2.5 text-sm outline-none transition focus:ring-2"
-                                style={{ borderColor: "#D1D5DB", backgroundColor: "#FFFFFF", color: "#111827" }}
-                            />
-                        </div>
-
-                        <div>
-                            <div className="mb-1.5 flex items-center justify-between">
+                    <div
+                        className="mt-8 rounded-lg border p-6"
+                        style={{ borderColor: "#E5E1D8", backgroundColor: "#FFFFFF" }}
+                    >
+                        <Form method="post" className="space-y-5">
+                            <div>
                                 <label
-                                    htmlFor="password"
-                                    className="block text-sm font-medium"
-                                    style={{ color: "#374151" }}
+                                    htmlFor="email"
+                                    className="mb-1.5 block text-xs font-medium uppercase tracking-wide"
+                                    style={{ color: "#6B7280", fontFamily: "ui-monospace, monospace" }}
                                 >
-                                    Password
+                                    Email
                                 </label>
-                                <button
-                                    type="button"
-                                    onClick={() => setShowPassword((v) => !v)}
-                                    className="text-xs font-medium"
-                                    style={{ color: "#3D8B84" }}
-                                >
-                                    {showPassword ? "Hide" : "Show"}
-                                </button>
+                                <input
+                                    id="email"
+                                    name="email"
+                                    type="email"
+                                    autoComplete="email"
+                                    required
+                                    className="w-full rounded-md border px-3 py-2.5 text-sm outline-none transition focus:ring-2"
+                                    style={{ borderColor: "#D1D5DB", backgroundColor: "#FAFAF8", color: "#111827" }}
+                                />
                             </div>
-                            <input
-                                id="password"
-                                name="password"
-                                type={showPassword ? "text" : "password"}
-                                autoComplete="current-password"
-                                required
-                                className="w-full rounded-md border px-3 py-2.5 text-sm outline-none transition focus:ring-2"
-                                style={{ borderColor: "#D1D5DB", backgroundColor: "#FFFFFF", color: "#111827" }}
-                            />
-                        </div>
 
-                        {actionData?.error && (
-                            <p
-                                role="alert"
-                                className="rounded-md border px-3 py-2 text-sm"
-                                style={{ borderColor: "#F3C1B8", backgroundColor: "#FDF1EF", color: "#B3402F" }}
+                            <div>
+                                <div className="mb-1.5 flex items-center justify-between">
+                                    <label
+                                        htmlFor="password"
+                                        className="block text-xs font-medium uppercase tracking-wide"
+                                        style={{ color: "#6B7280", fontFamily: "ui-monospace, monospace" }}
+                                    >
+                                        Password
+                                    </label>
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword((v) => !v)}
+                                        className="text-xs font-medium"
+                                        style={{ color: "#3D8B84" }}
+                                    >
+                                        {showPassword ? "Hide" : "Show"}
+                                    </button>
+                                </div>
+                                <input
+                                    id="password"
+                                    name="password"
+                                    type={showPassword ? "text" : "password"}
+                                    autoComplete="current-password"
+                                    required
+                                    className="w-full rounded-md border px-3 py-2.5 text-sm outline-none transition focus:ring-2"
+                                    style={{ borderColor: "#D1D5DB", backgroundColor: "#FAFAF8", color: "#111827" }}
+                                />
+                            </div>
+
+                            {actionData?.error && (
+                                <p
+                                    role="alert"
+                                    className="rounded-md border px-3 py-2 text-sm"
+                                    style={{ borderColor: "#F3C1B8", backgroundColor: "#FDF1EF", color: "#B3402F" }}
+                                >
+                                    {actionData.error}
+                                </p>
+                            )}
+
+                            <button
+                                type="submit"
+                                disabled={isSubmitting}
+                                className="flex w-full items-center justify-center gap-2 rounded-md py-2.5 text-sm font-semibold transition disabled:opacity-60"
+                                style={{ backgroundColor: "#20232B", color: "#F7F5F0" }}
                             >
-                                {actionData.error}
-                            </p>
-                        )}
+                                {isSubmitting ? "Logging in…" : "Log in"}
+                            </button>
+                        </Form>
+                    </div>
 
-                        <button
-                            type="submit"
-                            disabled={isSubmitting}
-                            className="w-full rounded-md py-2.5 text-sm font-semibold transition disabled:opacity-60"
-                            style={{ backgroundColor: "#20232B", color: "#F7F5F0" }}
-                        >
-                            {isSubmitting ? "Logging in…" : "Log in"}
-                        </button>
-                    </Form>
+                    <p
+                        className="mt-6 text-center text-xs uppercase tracking-[0.15em]"
+                        style={{ color: "#B9BEC9", fontFamily: "ui-monospace, monospace" }}
+                    >
+                        Ness · secure sign in
+                    </p>
                 </div>
             </div>
         </div>
