@@ -15,62 +15,81 @@ const axiosClient = axios.create({
   },
 });
 
-axiosClient.interceptors.request.use((config) => {
-  const accessToken = getAccessToken();
+let isRefreshing = false;
+let refreshPromise: Promise<string> | null = null;
+
+function isTokenExpired(token: string, skewSeconds = 10): boolean {
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    if (!payload.exp) return false;
+    const expiresAtMs = payload.exp * 1000;
+    return Date.now() >= expiresAtMs - skewSeconds * 1000;
+  } catch {
+    return true;
+  }
+}
+
+export async function refreshAccessToken(): Promise<string> {
+  if (isRefreshing && refreshPromise) {
+    return refreshPromise;
+  }
+
+  isRefreshing = true;
+  refreshPromise = axios
+      .post<AuthResponse>(
+          `${import.meta.env.VITE_API_DOMAIN}/auth/refresh`,
+          {},
+          { withCredentials: true }
+      )
+      .then((response) => {
+        const { accessToken } = response.data;
+        setAccessToken(accessToken);
+        return accessToken;
+      })
+      .finally(() => {
+        isRefreshing = false;
+        refreshPromise = null;
+      });
+
+  return refreshPromise;
+}
+
+axiosClient.interceptors.request.use(async (config) => {
+  let accessToken = getAccessToken();
+
+  if (accessToken && isTokenExpired(accessToken)) {
+    try {
+      accessToken = await refreshAccessToken();
+    } catch {
+      setAccessToken(null);
+    }
+  }
+
   if (accessToken) {
     config.headers.Authorization = `Bearer ${accessToken}`;
   }
   return config;
 });
 
-let isRefreshing = false;
-let pendingRequests: {
-  resolve: (token: string) => void;
-  reject: (error: unknown) => void;
-}[] = [];
-
-export async function refreshAccessToken(): Promise<string> {
-  const response = await axios.post<AuthResponse>(
-      `${import.meta.env.VITE_API_DOMAIN}/auth/refresh`,
-      {},
-      { withCredentials: true }
-  );
-  const { accessToken } = response.data;
-  setAccessToken(accessToken);
-  return accessToken;
-}
-
 axiosClient.interceptors.response.use(
     (response) => response,
     async (error: AxiosError) => {
       const originalRequest = error.config as RetryableRequestConfig | undefined;
+
       if (error.response?.status === 401 && originalRequest && !originalRequest._retry) {
-        if (isRefreshing) {
-          return new Promise((resolve, reject) => {
-            pendingRequests.push({ resolve, reject });
-          }).then((newToken) => {
-            originalRequest.headers.Authorization = `Bearer ${newToken}`;
-            return axiosClient(originalRequest);
-          });
-        }
         originalRequest._retry = true;
-        isRefreshing = true;
+
         try {
           const accessToken = await refreshAccessToken();
-          pendingRequests.forEach((req) => req.resolve(accessToken));
-          pendingRequests = [];
           originalRequest.headers.Authorization = `Bearer ${accessToken}`;
           return axiosClient(originalRequest);
         } catch (refreshError) {
-          pendingRequests.forEach((req) => req.reject(refreshError));
-          pendingRequests = [];
           setAccessToken(null);
           window.location.href = "/login";
           return Promise.reject(refreshError);
-        } finally {
-          isRefreshing = false;
         }
       }
+
       return Promise.reject(error);
     }
 );
