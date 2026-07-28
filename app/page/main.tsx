@@ -51,6 +51,7 @@ export function Main() {
                 }
                 <div className="flex-1 min-h-0 overflow-y-auto">
                     <HabitTracker/>
+                    <div className="h-6" aria-hidden="true" />
                 </div>
                 <MobileBlockOverlay />
                 <Bottombar />
