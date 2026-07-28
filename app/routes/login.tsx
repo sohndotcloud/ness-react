@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Form, useActionData, useNavigation, redirect } from "react-router";
+import {Form, useActionData, useNavigation, redirect, Link} from "react-router";
 import type { Route } from "./+types/login";
 import LoginForm from "~/page/login-form";
 
@@ -97,7 +97,9 @@ export default function Login() {
                     className="mt-6 text-center text-xs uppercase tracking-[0.15em]"
                     style={{ color: "#B9BEC9", fontFamily: "ui-monospace, monospace" }}
                 >
-                    Ness · secure sign in
+                    <Link to="/signup" className="font-medium hover:underline" style={{ color: "#20232B" }}>
+                        Sign up
+                    </Link>
                 </p>
             </div>
         </div>

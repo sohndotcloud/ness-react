@@ -1,19 +1,18 @@
-import Sidebar from "~/components/sidebar";
-import Bottombar from "~/components/bottombar";
-import UploadPdf from "~/components/upload-pdf";
-import PdfUpload from "~/components/pdf-upload";
-import {useRef} from "react";
-import {useBar} from "~/context/bottombar-context";
-import MobileBlockOverlay from "~/components/mobile-overlay";
-import {useTheme} from "~/context/theme-context";
 import DarkModeToggle from "~/components/darkmode";
 import HabitTracker from "~/components/habit-tracker";
+import {useRef} from "react";
+import {useBar} from "~/context/bottombar-context";
+import {useTheme} from "~/context/theme-context";
+import Sidebar from "~/components/sidebar";
+import MobileBlockOverlay from "~/components/mobile-overlay";
+import Bottombar from "~/components/bottombar";
 
 export function Main() {
     const containerRef = useRef<HTMLDivElement>(null);
     const lastSpawn = useRef(0);
     const { isPlaying } = useBar();
     const { isDark } = useTheme();
+
     function handlePointerMove(e: React.PointerEvent<HTMLDivElement>) {
         const now = Date.now();
         if (now - lastSpawn.current < 120) return;
@@ -28,6 +27,7 @@ export function Main() {
         containerRef.current?.appendChild(ripple);
         setTimeout(() => ripple.remove(), 900);
     }
+
     return (
         <main className="relative h-screen overflow-hidden bg-slate-200 dark:bg-slate-900">
             <div
@@ -49,7 +49,9 @@ export function Main() {
                         aria-hidden="true"
                     />
                 }
-                <HabitTracker/>
+                <div className="flex-1 min-h-0 overflow-y-auto">
+                    <HabitTracker/>
+                </div>
                 <MobileBlockOverlay />
                 <Bottombar />
             </div>
