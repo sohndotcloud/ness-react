@@ -22,6 +22,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
     try {
         response = await fetch(import.meta.env.VITE_API_DOMAIN + AUTH_ENDPOINT, {
             method: "POST",
+            credentials: "include", // required to accept the HttpOnly refresh cookie
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password }),
         });
@@ -33,10 +34,11 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
         if (response.status === 401) {
             return { error: "Incorrect email or password." };
         }
+        return { error: "Something went wrong. Try again." };
     }
 
     const data = await response.json();
-    const token = data?.token;
+    const token = data?.accessToken;
 
     if (!token) {
         return { error: "Service is down." };
