@@ -1,9 +1,11 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
+import { useNavigate } from "react-router";
 import { useAuth } from "../context/AuthContext";
 
 function SignUpForm() {
     const { register } = useAuth();
+    const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
@@ -12,9 +14,9 @@ function SignUpForm() {
         e.preventDefault();
         try {
             await register(email, password);
-            // redirect on success, e.g. navigate("/dashboard")
+            navigate("/");
         } catch (err) {
-            setError("Invalid email or password");
+            setError("Something went wrong. Try again.");
         }
     };
 
@@ -33,7 +35,7 @@ function SignUpForm() {
                 placeholder="Password"
             />
             {error && <p>{error}</p>}
-            <button type="submit">Sign Up</button>
+            <button type="submit">Create account</button>
         </form>
     );
 }
