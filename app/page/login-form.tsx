@@ -1,22 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router";
 
 function LoginForm() {
-    const { login } = useAuth();
+    const { login, isAuthenticated } = useAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate("/", { replace: true });
+        }
+    }, [isAuthenticated, navigate]);
+
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setError("");
         try {
             await login(email, password);
-            navigate("/");
+            // no navigate() here — the effect above fires once
+            // isAuthenticated actually flips to true
         } catch (err) {
-            setError("Invalid email or password");
+            console.error("login failed:", err);
+            setError(err instanceof Error ? err.message : "Login failed");
         }
     };
 
