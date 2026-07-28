@@ -13,6 +13,7 @@ export default function Sidebar() {
     const navigate = useNavigate();
 
     function endTokenSession() {
+        toggleSideMenu();
         localStorage.removeItem('token');
         navigate("/login");
     }
