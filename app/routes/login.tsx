@@ -22,7 +22,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
     try {
         response = await fetch(import.meta.env.VITE_API_DOMAIN + AUTH_ENDPOINT, {
             method: "POST",
-            credentials: "include", // required to accept the HttpOnly refresh cookie
+            credentials: "include",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password }),
         });
@@ -44,7 +44,6 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
         return { error: "Service is down." };
     }
 
-
     return redirect("/");
 }
 
@@ -55,83 +54,51 @@ export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
 
     return (
-        <div className="flex min-h-screen w-full" style={{ backgroundColor: "#FAFAF8" }}>
-            {/* Left rail — mirrors the app's sidebar */}
-            <div
-                className="hidden w-64 flex-col justify-between border-r px-6 py-8 md:flex"
-                style={{ borderColor: "#E5E1D8" }}
-            >
-                <div>
-                    <div className="flex items-center gap-2">
-                        <div
-                            className="flex h-8 w-8 items-center justify-center rounded-md"
-                            style={{ backgroundColor: "#20232B" }}
-                        >
-                            <span className="text-sm font-semibold" style={{ color: "#F2C14E" }}>
-                                N
-                            </span>
-                        </div>
-                        <span
-                            className="text-lg font-semibold"
-                            style={{ color: "#20232B", fontFamily: "'Fraunces', Georgia, serif" }}
-                        >
-                            Ness
+        <div
+            className="flex min-h-screen w-full items-center justify-center px-6"
+            style={{ backgroundColor: "#FAFAF8" }}
+        >
+            <div className="w-full max-w-sm">
+                <div className="mb-8 flex items-center justify-center gap-2">
+                    <div
+                        className="flex h-8 w-8 items-center justify-center rounded-md"
+                        style={{ backgroundColor: "#20232B" }}
+                    >
+                        <span className="text-sm font-semibold" style={{ color: "#F2C14E" }}>
+                            N
                         </span>
                     </div>
-
-                    <p
-                        className="mt-10 text-xs font-medium uppercase tracking-[0.2em]"
-                        style={{ color: "#9CA3AF", fontFamily: "ui-monospace, monospace" }}
+                    <span
+                        className="text-lg font-semibold"
+                        style={{ color: "#20232B", fontFamily: "'Fraunces', Georgia, serif" }}
                     >
-                        Your library
-                    </p>
-                    <p className="mt-2 text-sm leading-relaxed" style={{ color: "#6B7280" }}>
-                        Every PDF, one shelf, no distractions. Pick up exactly where the
-                        margin note left off.
-                    </p>
+                        Ness
+                    </span>
                 </div>
 
-                <p
-                    className="text-xs uppercase tracking-[0.2em]"
-                    style={{ color: "#B9BEC9", fontFamily: "ui-monospace, monospace" }}
+                <div
+                    className="rounded-lg border p-8"
+                    style={{ borderColor: "#E5E1D8", backgroundColor: "#FFFFFF" }}
                 >
-                    v1.0
-                </p>
-            </div>
-
-            {/* Main panel — card-based, matches dashboard content area */}
-            <div className="flex flex-1 items-center justify-center px-6 py-16">
-                <div className="w-full max-w-sm">
-                    <p
-                        className="mb-2 text-xs font-medium uppercase tracking-[0.2em]"
-                        style={{ color: "#9CA3AF", fontFamily: "ui-monospace, monospace" }}
-                    >
-                        Sign in
-                    </p>
                     <h2
-                        className="text-2xl font-semibold"
+                        className="text-xl font-semibold"
                         style={{ color: "#20232B", fontFamily: "'Fraunces', Georgia, serif" }}
                     >
                         Log in
                     </h2>
-                    <p className="mt-1 text-sm" style={{ color: "#6B7280" }}>
+                    <p className="mt-1 mb-6 text-sm" style={{ color: "#6B7280" }}>
                         Enter your details to open your library.
                     </p>
 
-                    <div
-                        className="mt-8 rounded-lg border p-6"
-                        style={{ borderColor: "#E5E1D8", backgroundColor: "#FFFFFF" }}
-                    >
-                        <LoginForm/>
-                    </div>
-
-                    <p
-                        className="mt-6 text-center text-xs uppercase tracking-[0.15em]"
-                        style={{ color: "#B9BEC9", fontFamily: "ui-monospace, monospace" }}
-                    >
-                        Ness · secure sign in
-                    </p>
+                    <LoginForm/>
                 </div>
+
+                <p
+                    className="mt-6 text-center text-xs uppercase tracking-[0.15em]"
+                    style={{ color: "#B9BEC9", fontFamily: "ui-monospace, monospace" }}
+                >
+                    Ness · secure sign in
+                </p>
             </div>
         </div>
     );
