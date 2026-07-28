@@ -44,7 +44,6 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
         return { error: "Service is down." };
     }
 
-    localStorage.setItem("auth_token", token);
 
     return redirect("/");
 }
