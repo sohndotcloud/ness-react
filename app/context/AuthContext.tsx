@@ -1,14 +1,28 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { authService } from "../api/authService";
-import type { AuthContextValue } from "../types/auth";
+import axiosClient from "../api/axiosClient";
+import { setAccessToken } from "../api/tokenStore";
+import type { AuthContextValue, AuthResponse } from "../types/auth";
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
-      authService.isAuthenticated()
-  );
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    axiosClient
+        .post<AuthResponse>("/auth/refresh")
+        .then((response) => {
+          setAccessToken(response.data.accessToken);
+          setIsAuthenticated(true);
+        })
+        .catch(() => {
+          setIsAuthenticated(false);
+        })
+        .finally(() => setIsLoading(false));
+  }, []);
 
   const login = async (email: string, password: string): Promise<void> => {
     await authService.login(email, password);
@@ -28,6 +42,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await authService.logout();
     setIsAuthenticated(false);
   };
+
+  if (isLoading) {
+    return null; // swap in a spinner/splash screen if you have one
+  }
 
   return (
       <AuthContext.Provider value={{ isAuthenticated, login, register, logout }}>

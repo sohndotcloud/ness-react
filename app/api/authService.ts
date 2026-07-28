@@ -1,45 +1,34 @@
 import axiosClient from "./axiosClient";
 import type { AuthResponse } from "../types/auth";
+import { getAccessToken, setAccessToken } from "./tokenStore";
 
 export const authService = {
-  async register(
-      email: string,
-      password: string,
-      timezone?: string
-  ): Promise<AuthResponse> {
+  async register(email: string, password: string, timezone?: string): Promise<void> {
     const response = await axiosClient.post<AuthResponse>("/auth/register", {
       email,
       password,
       timezone,
     });
-    const { accessToken, refreshToken } = response.data;
-    localStorage.setItem("accessToken", accessToken);
-    localStorage.setItem("refreshToken", refreshToken);
-    return response.data;
+    setAccessToken(response.data.accessToken);
   },
 
-  async login(email: string, password: string): Promise<AuthResponse> {
+  async login(email: string, password: string): Promise<void> {
     const response = await axiosClient.post<AuthResponse>("/auth/login", {
       email,
       password,
     });
-    const { accessToken, refreshToken } = response.data;
-    localStorage.setItem("accessToken", accessToken);
-    localStorage.setItem("refreshToken", refreshToken);
-    return response.data;
+    setAccessToken(response.data.accessToken);
   },
 
   async logout(): Promise<void> {
-    const refreshToken = localStorage.getItem("refreshToken");
     try {
-      await axiosClient.post("/auth/logout", { refreshToken });
+      await axiosClient.post("/auth/logout");
     } finally {
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
+      setAccessToken(null);
     }
   },
 
   isAuthenticated(): boolean {
-    return !!localStorage.getItem("accessToken");
+    return !!getAccessToken();
   },
 };

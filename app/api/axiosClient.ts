@@ -1,30 +1,29 @@
 import axios, { AxiosError } from "axios";
 import type { InternalAxiosRequestConfig } from "axios";
 import type { AuthResponse } from "../types/auth";
+import { getAccessToken, setAccessToken } from "./tokenStore";
 
-const API_BASE_URL = "http://localhost:8080";
 
 interface RetryableRequestConfig extends InternalAxiosRequestConfig {
   _retry?: boolean;
 }
 
 const axiosClient = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: import.meta.env.VITE_API_DOMAIN,
+  withCredentials: true, // sends the HttpOnly refresh cookie automatically
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-// Attach the access token to every request
 axiosClient.interceptors.request.use((config) => {
-  const accessToken = localStorage.getItem("accessToken");
+  const accessToken = getAccessToken();
   if (accessToken) {
     config.headers.Authorization = `Bearer ${accessToken}`;
   }
   return config;
 });
 
-// Auto-refresh on 401, then retry the original request
 let isRefreshing = false;
 let pendingRequests: {
   resolve: (token: string) => void;
@@ -38,7 +37,6 @@ axiosClient.interceptors.response.use(
 
       if (error.response?.status === 401 && originalRequest && !originalRequest._retry) {
         if (isRefreshing) {
-          // Queue this request until the in-flight refresh finishes
           return new Promise((resolve, reject) => {
             pendingRequests.push({ resolve, reject });
           }).then((newToken) => {
@@ -51,15 +49,14 @@ axiosClient.interceptors.response.use(
         isRefreshing = true;
 
         try {
-          const refreshToken = localStorage.getItem("refreshToken");
           const response = await axios.post<AuthResponse>(
-              `${API_BASE_URL}/auth/refresh`,
-              { refreshToken }
+              `${import.meta.env.VITE_API_DOMAIN}/auth/refresh`,
+              {},
+              { withCredentials: true }
           );
 
-          const { accessToken, refreshToken: newRefreshToken } = response.data;
-          localStorage.setItem("accessToken", accessToken);
-          localStorage.setItem("refreshToken", newRefreshToken);
+          const { accessToken } = response.data;
+          setAccessToken(accessToken);
 
           pendingRequests.forEach((req) => req.resolve(accessToken));
           pendingRequests = [];
@@ -70,8 +67,7 @@ axiosClient.interceptors.response.use(
           pendingRequests.forEach((req) => req.reject(refreshError));
           pendingRequests = [];
 
-          localStorage.removeItem("accessToken");
-          localStorage.removeItem("refreshToken");
+          setAccessToken(null);
           window.location.href = "/login";
           return Promise.reject(refreshError);
         } finally {
