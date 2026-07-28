@@ -33,13 +33,16 @@ export async function refreshAccessToken(): Promise<string> {
   if (isRefreshing && refreshPromise) {
     return refreshPromise;
   }
-
   isRefreshing = true;
   refreshPromise = axios
       .post<AuthResponse>(
           `${import.meta.env.VITE_API_DOMAIN}/auth/refresh`,
           {},
-          { withCredentials: true }
+          {
+            withCredentials: true,
+            headers: { "Content-Type": "application/json" },
+            maxRedirects: 0,
+          }
       )
       .then((response) => {
         const { accessToken } = response.data;
@@ -50,17 +53,17 @@ export async function refreshAccessToken(): Promise<string> {
         isRefreshing = false;
         refreshPromise = null;
       });
-
   return refreshPromise;
 }
 
 axiosClient.interceptors.request.use(async (config) => {
   let accessToken = getAccessToken();
 
-  if (accessToken && isTokenExpired(accessToken)) {
+  if (!accessToken || isTokenExpired(accessToken)) {
     try {
       accessToken = await refreshAccessToken();
     } catch {
+      accessToken = null;
       setAccessToken(null);
     }
   }
@@ -75,10 +78,8 @@ axiosClient.interceptors.response.use(
     (response) => response,
     async (error: AxiosError) => {
       const originalRequest = error.config as RetryableRequestConfig | undefined;
-
       if (error.response?.status === 401 && originalRequest && !originalRequest._retry) {
         originalRequest._retry = true;
-
         try {
           const accessToken = await refreshAccessToken();
           originalRequest.headers.Authorization = `Bearer ${accessToken}`;
@@ -89,7 +90,6 @@ axiosClient.interceptors.response.use(
           return Promise.reject(refreshError);
         }
       }
-
       return Promise.reject(error);
     }
 );
