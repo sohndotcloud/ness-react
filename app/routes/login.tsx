@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Form, useActionData, useNavigation, redirect } from "react-router";
 import type { Route } from "./+types/login";
+import LoginForm from "~/page/login-form";
 
 const AUTH_ENDPOINT = "/auth/login";
 
@@ -32,14 +33,13 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
         if (response.status === 401) {
             return { error: "Incorrect email or password." };
         }
-        return { error: "Something went wrong. Try again." };
     }
 
     const data = await response.json();
     const token = data?.token;
 
     if (!token) {
-        return { error: "Login succeeded but no token was returned." };
+        return { error: "Service is down." };
     }
 
     localStorage.setItem("auth_token", token);
@@ -121,74 +121,7 @@ export default function Login() {
                         className="mt-8 rounded-lg border p-6"
                         style={{ borderColor: "#E5E1D8", backgroundColor: "#FFFFFF" }}
                     >
-                        <Form method="post" className="space-y-5">
-                            <div>
-                                <label
-                                    htmlFor="email"
-                                    className="mb-1.5 block text-xs font-medium uppercase tracking-wide"
-                                    style={{ color: "#6B7280", fontFamily: "ui-monospace, monospace" }}
-                                >
-                                    Email
-                                </label>
-                                <input
-                                    id="email"
-                                    name="email"
-                                    type="email"
-                                    autoComplete="email"
-                                    required
-                                    className="w-full rounded-md border px-3 py-2.5 text-sm outline-none transition focus:ring-2"
-                                    style={{ borderColor: "#D1D5DB", backgroundColor: "#FAFAF8", color: "#111827" }}
-                                />
-                            </div>
-
-                            <div>
-                                <div className="mb-1.5 flex items-center justify-between">
-                                    <label
-                                        htmlFor="password"
-                                        className="block text-xs font-medium uppercase tracking-wide"
-                                        style={{ color: "#6B7280", fontFamily: "ui-monospace, monospace" }}
-                                    >
-                                        Password
-                                    </label>
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowPassword((v) => !v)}
-                                        className="text-xs font-medium"
-                                        style={{ color: "#3D8B84" }}
-                                    >
-                                        {showPassword ? "Hide" : "Show"}
-                                    </button>
-                                </div>
-                                <input
-                                    id="password"
-                                    name="password"
-                                    type={showPassword ? "text" : "password"}
-                                    autoComplete="current-password"
-                                    required
-                                    className="w-full rounded-md border px-3 py-2.5 text-sm outline-none transition focus:ring-2"
-                                    style={{ borderColor: "#D1D5DB", backgroundColor: "#FAFAF8", color: "#111827" }}
-                                />
-                            </div>
-
-                            {actionData?.error && (
-                                <p
-                                    role="alert"
-                                    className="rounded-md border px-3 py-2 text-sm"
-                                    style={{ borderColor: "#F3C1B8", backgroundColor: "#FDF1EF", color: "#B3402F" }}
-                                >
-                                    {actionData.error}
-                                </p>
-                            )}
-
-                            <button
-                                type="submit"
-                                disabled={isSubmitting}
-                                className="flex w-full items-center justify-center gap-2 rounded-md py-2.5 text-sm font-semibold transition disabled:opacity-60"
-                                style={{ backgroundColor: "#20232B", color: "#F7F5F0" }}
-                            >
-                                {isSubmitting ? "Logging in…" : "Log in"}
-                            </button>
-                        </Form>
+                        <LoginForm/>
                     </div>
 
                     <p

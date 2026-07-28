@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Form, useActionData, useNavigation, redirect } from "react-router";
 import type {Route} from "../../.react-router/types/app/routes/+types/signup";
+import SignUpForm from "~/page/signup-form";
 
 const REGISTER_ENDPOINT = "/auth/register";
 
@@ -115,94 +116,7 @@ export default function Signup() {
             Takes a minute. No card required.
           </p>
 
-          <Form method="post" className="mt-8 space-y-5">
-            <div>
-              <label
-                htmlFor="name"
-                className="mb-1.5 block text-sm font-medium"
-                style={{ color: "#374151" }}
-              >
-                Name
-              </label>
-              <input
-                id="name"
-                name="name"
-                type="text"
-                autoComplete="name"
-                required
-                className="w-full rounded-md border px-3 py-2.5 text-sm outline-none transition focus:ring-2"
-                style={{ borderColor: "#D1D5DB", backgroundColor: "#FFFFFF", color: "#111827" }}
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="email"
-                className="mb-1.5 block text-sm font-medium"
-                style={{ color: "#374151" }}
-              >
-                Email
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                className="w-full rounded-md border px-3 py-2.5 text-sm outline-none transition focus:ring-2"
-                style={{ borderColor: "#D1D5DB", backgroundColor: "#FFFFFF", color: "#111827" }}
-              />
-            </div>
-
-            <div>
-              <div className="mb-1.5 flex items-center justify-between">
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium"
-                  style={{ color: "#374151" }}
-                >
-                  Password
-                </label>
-                <button
-                  type="button"
-                  onClick={() => setShowPassword((v) => !v)}
-                  className="text-xs font-medium"
-                  style={{ color: "#3D8B84" }}
-                >
-                  {showPassword ? "Hide" : "Show"}
-                </button>
-              </div>
-              <input
-                id="password"
-                name="password"
-                type={showPassword ? "text" : "password"}
-                autoComplete="new-password"
-                required
-                minLength={8}
-                className="w-full rounded-md border px-3 py-2.5 text-sm outline-none transition focus:ring-2"
-                style={{ borderColor: "#D1D5DB", backgroundColor: "#FFFFFF", color: "#111827" }}
-              />
-            </div>
-
-            {actionData?.error && (
-              <p
-                role="alert"
-                className="rounded-md border px-3 py-2 text-sm"
-                style={{ borderColor: "#F3C1B8", backgroundColor: "#FDF1EF", color: "#B3402F" }}
-              >
-                {actionData.error}
-              </p>
-            )}
-
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full rounded-md py-2.5 text-sm font-semibold transition disabled:opacity-60"
-              style={{ backgroundColor: "#20232B", color: "#F7F5F0" }}
-            >
-              {isSubmitting ? "Creating account…" : "Create account"}
-            </button>
-          </Form>
+         <SignUpForm/>
         </div>
       </div>
     </div>
