@@ -6,6 +6,7 @@
 // must be enabled in your tailwind.config (either 'class' or 'media').
 import React, { useState, useRef } from "react";
 import { Check, Flame, Plus, Trash2, X, type LucideIcon } from "lucide-react";
+import {useTheme} from "~/context/theme-context";
 
 const DAY_LABELS: string[] = ["M", "T", "W", "T", "F", "S", "S"];
 
@@ -226,6 +227,7 @@ export default function HabitTracker() {
   const [habits, setHabits] = useState<Habit[]>(initialHabits);
   const nextId = useRef<number>(initialHabits.length + 1);
   const todayIndex = getTodayIndex();
+  const { isDark, setTheme} = useTheme();
 
   const now = new Date();
   const hour = now.getHours();
@@ -236,6 +238,12 @@ export default function HabitTracker() {
     month: "long",
     day: "numeric",
   });
+
+  if (hour > 18) {
+      setTheme("dark");
+  } else {
+      setTheme("light");
+  }
 
   const todayCompleted = habits.filter((h) => h.done[todayIndex] === 1).length;
   const bestStreak = habits.reduce((max, h) => Math.max(max, h.streak), 0);
