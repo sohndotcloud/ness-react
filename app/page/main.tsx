@@ -50,8 +50,9 @@ export function Main() {
                 <div className="relative flex-1 min-h-0 overflow-y-auto">
                     <Sidebar />
                     <DarkModeToggle />
-                    <HabitTracker/>
-                    <div className="h-12" aria-hidden="true" />
+                    <div className="min-h-[450px]">
+                        <HabitTracker/>
+                    </div>
                 </div>
                 <MobileBlockOverlay />
                 <Bottombar />

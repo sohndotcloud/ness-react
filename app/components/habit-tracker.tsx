@@ -1,12 +1,5 @@
-// Habit tracker page — requires Tailwind CSS and the `lucide-react` icon
-// package (npm install lucide-react) in the host project.
-// Colors/typography are matched to the existing Sidebar component's system
-// (cyan accent, slate neutrals, mono uppercase eyebrow labels, outline-based
-// focus rings). Dark mode uses Tailwind's `dark:` variant, so `darkMode`
-// must be enabled in your tailwind.config (either 'class' or 'media').
 import React, { useState, useRef } from "react";
 import { Check, Flame, Plus, Trash2, X, type LucideIcon } from "lucide-react";
-import {useTheme} from "~/context/theme-context";
 
 const DAY_LABELS: string[] = ["M", "T", "W", "T", "F", "S", "S"];
 
@@ -20,8 +13,8 @@ interface Habit {
 const initialHabits: Habit[] = [];
 
 function getTodayIndex(): number {
-  const jsDay = new Date().getDay(); // 0 = Sunday .. 6 = Saturday
-  return jsDay === 0 ? 6 : jsDay - 1; // convert to Monday-first index (0..6)
+  const jsDay = new Date().getDay();
+  return jsDay === 0 ? 6 : jsDay - 1;
 }
 
 interface DayCellProps {
@@ -227,7 +220,6 @@ export default function HabitTracker() {
   const [habits, setHabits] = useState<Habit[]>(initialHabits);
   const nextId = useRef<number>(initialHabits.length + 1);
   const todayIndex = getTodayIndex();
-  const { isDark, setTheme} = useTheme();
 
   const now = new Date();
   const hour = now.getHours();
