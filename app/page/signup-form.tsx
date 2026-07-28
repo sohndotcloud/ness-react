@@ -21,23 +21,95 @@ function SignUpForm() {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email"
-            />
-            <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-            />
-            {error && <p>{error}</p>}
-            <button type="submit">Create account</button>
-        </form>
-    );
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <div>
+                <label
+                    htmlFor="email"
+                    className="mb-1.5 block text-xs font-medium uppercase tracking-wide"
+                    style={{ color: "#6B7280" }}
+                >
+                    Email
+                </label>
+                <input
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="you@example.com"
+                    className="w-full rounded-md border px-3 py-2.5 text-sm outline-none transition-colors"
+                    style={{
+                        borderColor: "#D8D3C7",
+                        backgroundColor: "#FAFAF8",
+                        color: "#20232B",
+                    }}
+                    onFocus={(e) => {
+                        e.currentTarget.style.borderColor = "#20232B";
+                        e.currentTarget.style.backgroundColor = "#FFFFFF";
+                    }}
+                    onBlur={(e) => {
+                        e.currentTarget.style.borderColor = "#D8D3C7";
+                        e.currentTarget.style.backgroundColor = "#FAFAF8";
+                    }}
+                />
+            </div>
+
+            <div>
+                <label
+                    htmlFor="password"
+                    className="mb-1.5 block text-xs font-medium uppercase tracking-wide"
+                    style={{ color: "#6B7280" }}
+                >
+                    Password
+                </label>
+                <input
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="w-full rounded-md border px-3 py-2.5 text-sm outline-none transition-colors"
+                    style={{
+                        borderColor: "#D8D3C7",
+                        backgroundColor: "#FAFAF8",
+                        color: "#20232B",
+                    }}
+                    onFocus={(e) => {
+                        e.currentTarget.style.borderColor = "#20232B";
+                        e.currentTarget.style.backgroundColor = "#FFFFFF";
+                    }}
+                    onBlur={(e) => {
+                        e.currentTarget.style.borderColor = "#D8D3C7";
+                        e.currentTarget.style.backgroundColor = "#FAFAF8";
+                    }}
+                />
+            </div>
+
+            {error && (
+                <p className="text-sm" style={{ color: "#B91C1C" }}>
+                    {error}
+                </p>
+            )}
+
+            <button
+                type="submit"
+                className="mt-2 rounded-md px-3 py-2.5 text-sm font-medium transition-opacity hover:opacity-90"
+                style={{ backgroundColor: "#20232B", color: "#FFFFFF" }}
+            >
+                Create account
+            </button>
+
+            <p className="mt-2 text-center text-sm" style={{ color: "#6B7280" }}>
+                Already have an account?{" "}
+                <a
+                href="/login"
+                className="font-medium hover:underline"
+                style={{ color: "#20232B" }}
+                >
+                Log in
+            </a>
+        </p>
+</form>
+);
 }
 
 export default SignUpForm;

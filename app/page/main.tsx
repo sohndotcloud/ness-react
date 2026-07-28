@@ -38,8 +38,6 @@ export function Main() {
                 className="absolute inset-x-0 top-0 bottom-[75px] dark:bg-[radial-gradient(ellipse_at_top,_rgba(34,211,238,0.06),_transparent_60%)] pointer-events-none"
                 aria-hidden="true"
             />
-            <Sidebar />
-            <DarkModeToggle />
             <div className="relative h-screen flex flex-col min-h-0">
                 { isPlaying && isDark &&
                     <div
@@ -49,7 +47,9 @@ export function Main() {
                         aria-hidden="true"
                     />
                 }
-                <div className="flex-1 min-h-0 overflow-y-auto">
+                <div className="relative flex-1 min-h-0 overflow-y-auto">
+                    <Sidebar />
+                    <DarkModeToggle />
                     <HabitTracker/>
                     <div className="h-12" aria-hidden="true" />
                 </div>

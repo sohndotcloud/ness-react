@@ -239,12 +239,6 @@ export default function HabitTracker() {
     day: "numeric",
   });
 
-  if (hour > 18) {
-      setTheme("dark");
-  } else {
-      setTheme("light");
-  }
-
   const todayCompleted = habits.filter((h) => h.done[todayIndex] === 1).length;
   const bestStreak = habits.reduce((max, h) => Math.max(max, h.streak), 0);
 
