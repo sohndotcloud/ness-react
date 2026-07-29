@@ -6,6 +6,7 @@ import {useTheme} from "~/context/theme-context";
 import Sidebar from "~/components/sidebar";
 import MobileBlockOverlay from "~/components/mobile-overlay";
 import Bottombar from "~/components/bottombar";
+import HabitCalendar from "~/components/habit-calendar";
 
 export function Main() {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -50,9 +51,7 @@ export function Main() {
                 <div className="relative flex-1 min-h-0 overflow-y-auto">
                     <Sidebar />
                     <DarkModeToggle />
-                    <div className="min-h-[450px]">
-                        <HabitTracker/>
-                    </div>
+                    <HabitCalendar/>
                 </div>
                 <MobileBlockOverlay />
                 <Bottombar />
