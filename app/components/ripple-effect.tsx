@@ -1,12 +1,5 @@
 import { useRef } from "react";
 
-/**
- * Drop this anywhere you want a ripple trail to follow the cursor/touch —
- * it renders as an absolutely-positioned overlay, so its parent needs
- * position: relative (or similar) for it to size correctly.
- *
- * Requires the .cursor-ripple CSS below to be in your global stylesheet.
- */
 export default function CursorRippleLayer() {
     const containerRef = useRef<HTMLDivElement>(null);
     const lastSpawn = useRef(0);
