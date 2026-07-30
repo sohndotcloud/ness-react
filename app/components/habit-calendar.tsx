@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Check, Flame, Plus, X, type LucideIcon } from "lucide-react";
 import axiosClient from "~/api/axiosClient";
 import { useTheme } from "~/context/theme-context";
+import CursorRippleLayer from "~/components/ripple-effect";
 
 export interface Habit {
   id: string;
@@ -427,6 +428,7 @@ export default function HabitCalendar({
 
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-slate-50 p-4 dark:bg-slate-950">
+      <CursorRippleLayer/>
       <div className="w-full max-w-xl rounded-lg border border-slate-200 bg-white p-4 text-slate-800 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 sm:p-6">
         <div className="mb-4">
           <p className="font-mono text-xs uppercase tracking-wider text-slate-500 dark:text-slate-500">{dateLabel}</p>
