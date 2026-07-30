@@ -6,7 +6,6 @@ A PDF library and reading app with built-in habit tracking — read, organize, a
 
 ## Features
 
-- **PDF Library** — upload and organize PDFs, with animated book-style cards and thumbnail previews.
 - **PDF Viewer** — read documents in-app.
 - **Habit Tracker** — track daily habits with streaks, a "tasks left today" summary, and a customizable calendar heatmap showing completion history per habit.
 - **Auth** — cookie-based session with automatic access-token refresh.
