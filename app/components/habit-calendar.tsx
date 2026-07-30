@@ -60,8 +60,9 @@ function colorForHabitIndex(index: number): string {
   return HABIT_COLOR_PALETTE[index % HABIT_COLOR_PALETTE.length];
 }
 
-function isoDatePrefix(iso: string): string {
-  return iso.slice(0, 10);
+function createIsodate(iso: string): string {
+  const d = new Date(iso);
+  return toDateKey(d.getFullYear(), d.getMonth(), d.getDate());
 }
 
 function habitResponseToHabit(res: HabitResponse, index: number): Habit {
@@ -69,7 +70,7 @@ function habitResponseToHabit(res: HabitResponse, index: number): Habit {
     id: res.id,
     name: res.name,
     color: colorForHabitIndex(index),
-    createdDate: isoDatePrefix(res.createdAt),
+    createdDate: createIsodate(res.createdAt),
   };
 }
 

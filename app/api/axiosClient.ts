@@ -10,6 +10,8 @@ interface RetryableRequestConfig extends InternalAxiosRequestConfig {
 const axiosClient = axios.create({
   baseURL: import.meta.env.VITE_API_DOMAIN,
   withCredentials: true,
+  xsrfCookieName: "XSRF-TOKEN",
+  xsrfHeaderName: "X-XSRF-TOKEN",
   headers: {
     "Content-Type": "application/json",
   },
