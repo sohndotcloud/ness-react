@@ -11,16 +11,28 @@ const STREAMS = {
 
 const FADE_DURATION_MS = 2500;
 const FADE_STEPS = 50;
+const REVEAL_THRESHOLD_PX = 120; // how close to the bottom edge before it shows
 
 export default function Bottombar() {
     const { weather, error, loading } = useUserWeather();
     const { isPlaying, setIsPlaying } = useBar();
     const { isDark } = useTheme();
     const [time, setTime] = useState<Date | null>(null);
+    const [isNearBottom, setIsNearBottom] = useState(false);
 
     const lightRef = useRef<HTMLAudioElement | null>(null);
     const darkRef = useRef<HTMLAudioElement | null>(null);
     const fadeIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+    // Reveal only when the cursor nears the bottom margin
+    useEffect(() => {
+        function handleMouseMove(event: MouseEvent) {
+            const distanceFromBottom = window.innerHeight - event.clientY;
+            setIsNearBottom(distanceFromBottom <= REVEAL_THRESHOLD_PX);
+        }
+        window.addEventListener("mousemove", handleMouseMove);
+        return () => window.removeEventListener("mousemove", handleMouseMove);
+    }, []);
 
     // Set up both streams once
     useEffect(() => {
@@ -108,7 +120,11 @@ export default function Bottombar() {
     const currentStream = isDark ? STREAMS.dark : STREAMS.light;
 
     return (
-        <div className="fixed bottom-0 left-0 w-full z-20 h-[72px] bg-white/85 dark:bg-slate-950/85 backdrop-blur-md border-t border-cyan-500/10">
+        <div
+            className={`fixed bottom-0 left-0 w-full z-20 h-[72px] bg-white/85 dark:bg-slate-950/85 backdrop-blur-md border-t border-cyan-500/10 transition-all duration-300 ease-out ${
+                isNearBottom ? "translate-y-0 opacity-100" : "translate-y-full opacity-0 pointer-events-none"
+            }`}
+        >
             <div className="flex items-center h-full max-w-[1400px] mx-auto px-5 gap-5">
 
                 <button
