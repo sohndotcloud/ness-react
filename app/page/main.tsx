@@ -6,6 +6,8 @@ import {useTheme} from "~/context/theme-context";
 import Sidebar from "~/components/sidebar";
 import Bottombar from "~/components/bottombar";
 import HabitCalendar from "~/components/habit-calendar";
+import {Form} from "react-router";
+import TopControls from "~/components/top-controls";
 
 export function Main() {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -48,9 +50,7 @@ export function Main() {
                     />
                 }
                 <div className="relative flex-1 min-h-0 overflow-y-auto">
-                    <div className="relative z-30">
-                        <DarkModeToggle />
-                    </div>
+                    <TopControls/>
                     <HabitCalendar/>
                 </div>
                 <Bottombar />

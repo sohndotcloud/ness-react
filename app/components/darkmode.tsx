@@ -1,4 +1,4 @@
-import {useTheme} from "~/context/theme-context";
+import { useTheme } from "~/context/theme-context";
 
 const SUN_PATH =
     "M12 4.5a1 1 0 011-1 7.5 7.5 0 100 15 1 1 0 010 2A9.5 9.5 0 1113 3.5a1 1 0 01-1 1z";
@@ -13,17 +13,17 @@ export default function DarkModeToggle() {
             onClick={toggleTheme}
             aria-label="Toggle dark mode"
             aria-pressed={isDark}
-            className="absolute top-3 right-5 z-20 flex h-[30px] w-[56px] items-center rounded-full border border-slate-300 bg-white/90 backdrop-blur transition-colors dark:border-slate-700 dark:bg-slate-800/90"
+            className="flex h-[30px] w-[56px] items-center rounded-full border border-slate-300 bg-white/90 backdrop-blur transition-colors dark:border-slate-700 dark:bg-slate-800/90"
         >
-      <span
-          className={`flex h-[22px] w-[22px] items-center justify-center rounded-full bg-slate-600 transition-transform duration-300 dark:bg-slate-400 ${
-              isDark ? "translate-x-[31px]" : "translate-x-[3px]"
-          }`}
-      >
-        <svg viewBox="0 0 24 24" className="h-[13px] w-[13px] fill-white dark:fill-slate-900">
-          <path d={isDark ? MOON_PATH : SUN_PATH} />
-        </svg>
-      </span>
+            <span
+                className={`flex h-[22px] w-[22px] items-center justify-center rounded-full bg-slate-600 transition-transform duration-300 dark:bg-slate-400 ${
+                    isDark ? "translate-x-[31px]" : "translate-x-[3px]"
+                }`}
+            >
+                <svg viewBox="0 0 24 24" className="h-[13px] w-[13px] fill-white dark:fill-slate-900">
+                    <path d={isDark ? MOON_PATH : SUN_PATH} />
+                </svg>
+            </span>
         </button>
     );
 }

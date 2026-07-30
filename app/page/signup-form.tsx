@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
-import { useNavigate } from "react-router";
+import {Link, useNavigate} from "react-router";
 import { useAuth } from "../context/AuthContext";
 
 function SignUpForm() {
@@ -100,13 +100,12 @@ function SignUpForm() {
 
             <p className="mt-2 text-center text-sm" style={{ color: "#6B7280" }}>
                 Already have an account?{" "}
-                <a
-                href="/login"
+                <Link
+                to="/login"
                 className="font-medium hover:underline"
-                style={{ color: "#20232B" }}
                 >
                 Log in
-            </a>
+            </Link>
         </p>
 </form>
 );
