@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { useBar } from "~/context/bottombar-context";
-import { useUserWeather } from "~/util/useUserWeather";
 import Timer from '~/components/timer';
 import { useTheme } from "~/context/theme-context";
 
@@ -14,7 +13,6 @@ const FADE_STEPS = 50;
 const REVEAL_THRESHOLD_PX = 20;
 
 export default function Bottombar() {
-    const { weather, error, loading } = useUserWeather();
     const { isPlaying, setIsPlaying } = useBar();
     const { isDark } = useTheme();
     const [time, setTime] = useState<Date | null>(null);
@@ -184,12 +182,6 @@ export default function Bottombar() {
 
                 <div className="hidden sm:flex items-center gap-6 font-mono text-sm">
                     <div className="text-right">
-                        <div className="text-[11px] uppercase tracking-[0.15em] text-slate-500">Temp</div>
-                        <div className="text-slate-700 dark:text-slate-200 tabular-nums">
-                            {weather?.temperature !== undefined ? `${weather.temperature}°F` : '—'}
-                        </div>
-                    </div>
-                    <div className="text-right">
                         <div className="text-[10px] uppercase tracking-[0.15em] text-slate-500">Time</div>
                         <div className="text-slate-700 dark:text-slate-200 tabular-nums">
                             {time ? time.toLocaleTimeString() : '—'}
@@ -199,9 +191,6 @@ export default function Bottombar() {
 
                 <div className="hidden sm:block w-px h-8 bg-slate-800" />
 
-                <div className="flex-shrink-0 text-slate-700 dark:text-slate-200">
-                    <Timer />
-                </div>
             </div>
 
             <style>{`
