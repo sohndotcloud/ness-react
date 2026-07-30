@@ -21,6 +21,9 @@ function getCsrfToken(): string | null {
 const axiosClient = axios.create({
     baseURL: import.meta.env.VITE_API_DOMAIN,
     withCredentials: true,
+    xsrfCookieName: 'XSRF-TOKEN',
+    xsrfHeaderName: 'X-XSRF-TOKEN',
+    withXSRFToken: true, // required for cross-site requests in axios 1.6+
     headers: {
         "Content-Type": "application/json",
     },
