@@ -13,7 +13,7 @@ export default function DarkModeToggle() {
             onClick={toggleTheme}
             aria-label="Toggle dark mode"
             aria-pressed={isDark}
-            className="absolute top-4 right-5 z-20 flex h-[30px] w-[56px] items-center rounded-full border border-slate-300 bg-white/90 backdrop-blur transition-colors dark:border-slate-700 dark:bg-slate-800/90"
+            className="absolute top-3 right-5 z-20 flex h-[30px] w-[56px] items-center rounded-full border border-slate-300 bg-white/90 backdrop-blur transition-colors dark:border-slate-700 dark:bg-slate-800/90"
         >
       <span
           className={`flex h-[22px] w-[22px] items-center justify-center rounded-full bg-slate-600 transition-transform duration-300 dark:bg-slate-400 ${
@@ -21,7 +21,7 @@ export default function DarkModeToggle() {
           }`}
       >
         <svg viewBox="0 0 24 24" className="h-[13px] w-[13px] fill-white dark:fill-slate-900">
-          <path d={isDark ? SUN_PATH : MOON_PATH} />
+          <path d={isDark ? MOON_PATH : SUN_PATH} />
         </svg>
       </span>
         </button>

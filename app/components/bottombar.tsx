@@ -11,7 +11,7 @@ const STREAMS = {
 
 const FADE_DURATION_MS = 2500;
 const FADE_STEPS = 50;
-const REVEAL_THRESHOLD_PX = 120; // how close to the bottom edge before it shows
+const REVEAL_THRESHOLD_PX = 20;
 
 export default function Bottombar() {
     const { weather, error, loading } = useUserWeather();

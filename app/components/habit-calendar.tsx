@@ -116,8 +116,8 @@ async function fetchHabitLogs(habitId: string, days: number): Promise<HabitLogRe
 }
 
 async function createHabitLog(
-  habitId: string,
-  logRequest: HabitLogRequest
+    habitId: string,
+    logRequest: HabitLogRequest
 ): Promise<HabitLogResponse | undefined> {
   try {
     const res = await axiosClient.post<HabitLogResponse>(`/habits/${habitId}/logs`, logRequest);
@@ -231,7 +231,7 @@ function computeStreak(habitId: string, entriesByDate: Map<string, HabitEntry[]>
   while (true) {
     const dateKey = toDateKey(cursor.getFullYear(), cursor.getMonth(), cursor.getDate());
     const hasCompletedEntry = (entriesByDate.get(dateKey) ?? []).some(
-      (e) => e.habitId === habitId && e.completed
+        (e) => e.habitId === habitId && e.completed
     );
     if (!hasCompletedEntry) break;
     streak += 1;
@@ -241,11 +241,11 @@ function computeStreak(habitId: string, entriesByDate: Map<string, HabitEntry[]>
 }
 
 export default function HabitCalendar({
-  weekStartsOn = 0,
-  initialDate = new Date(),
-}: HabitCalendarProps) {
+                                        weekStartsOn = 0,
+                                        initialDate = new Date(),
+                                      }: HabitCalendarProps) {
   const [cursor, setCursor] = useState<Date>(
-    () => new Date(initialDate.getFullYear(), initialDate.getMonth(), 1)
+      () => new Date(initialDate.getFullYear(), initialDate.getMonth(), 1)
   );
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
   const [habits, setHabits] = useState<Habit[]>([]);
@@ -277,7 +277,7 @@ export default function HabitCalendar({
 
         const days = daysBackNeeded(year, month);
         const logsPerHabit = await Promise.all(
-          loadedHabits.map((h) => fetchHabitLogs(h.id, days))
+            loadedHabits.map((h) => fetchHabitLogs(h.id, days))
         );
         if (cancelled) return;
 
@@ -304,8 +304,8 @@ export default function HabitCalendar({
 
   const weekdayLabels = weekStartsOn === 1 ? WEEKDAY_LABELS_MON : WEEKDAY_LABELS_SUN;
   const weeks = useMemo(
-    () => getMonthMatrix(year, month, weekStartsOn),
-    [year, month, weekStartsOn]
+      () => getMonthMatrix(year, month, weekStartsOn),
+      [year, month, weekStartsOn]
   );
 
   const entriesByDate = useMemo(() => {
@@ -318,9 +318,9 @@ export default function HabitCalendar({
   }, [entries]);
 
   const todayKey = toDateKey(
-    new Date().getFullYear(),
-    new Date().getMonth(),
-    new Date().getDate()
+      new Date().getFullYear(),
+      new Date().getMonth(),
+      new Date().getDate()
   );
 
   function goToMonth(delta: number) {
@@ -342,12 +342,12 @@ export default function HabitCalendar({
 
   const activeHabitsToday = habitsActiveOn(habits, todayKey);
   const completedToday = (entriesByDate.get(todayKey) ?? []).filter(
-    (e) => e.completed && activeHabitsToday.some((h) => h.id === e.habitId)
+      (e) => e.completed && activeHabitsToday.some((h) => h.id === e.habitId)
   ).length;
   const tasksLeftToday = Math.max(activeHabitsToday.length - completedToday, 0);
   const bestStreak = habits.reduce(
-    (max, h) => Math.max(max, computeStreak(h.id, entriesByDate)),
-    0
+      (max, h) => Math.max(max, computeStreak(h.id, entriesByDate)),
+      0
   );
 
   function openAddHabit() {
@@ -387,13 +387,13 @@ export default function HabitCalendar({
     setTogglingKey(key);
 
     const wasCompleted = entries.some(
-      (e) => e.habitId === habitId && e.date === dateKey && e.completed
+        (e) => e.habitId === habitId && e.date === dateKey && e.completed
     );
 
     setEntries((prev) =>
-      wasCompleted
-        ? prev.filter((e) => !(e.habitId === habitId && e.date === dateKey))
-        : [...prev, { habitId, date: dateKey, completed: true }]
+        wasCompleted
+            ? prev.filter((e) => !(e.habitId === habitId && e.date === dateKey))
+            : [...prev, { habitId, date: dateKey, completed: true }]
     );
 
     try {
@@ -427,284 +427,284 @@ export default function HabitCalendar({
   }
 
   return (
-    <div className="flex min-h-screen w-full items-center justify-center bg-slate-50 p-4 dark:bg-slate-950">
-      <CursorRippleLayer/>
-      <div className="w-full max-w-xl rounded-lg border border-slate-200 bg-white p-4 text-slate-800 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 sm:p-6">
-        <div className="mb-4">
-          <p className="font-mono text-xs uppercase tracking-wider text-slate-500 dark:text-slate-500">{dateLabel}</p>
-          <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">{greeting}</h1>
-        </div>
-
-        <div className="mb-4 grid grid-cols-2 gap-3">
-          <StatCard icon={Check} value={tasksLeftToday} sub="tasks left today" />
-          <StatCard icon={Flame} value={bestStreak} sub="day streak" />
-        </div>
-
-        <div className="mb-4 flex items-center justify-between">
-          <div>
-            <p className="font-mono text-xs uppercase tracking-wider text-slate-500 dark:text-slate-500">
-              {year}
-            </p>
-            <h2 className="font-mono text-lg uppercase tracking-wide text-slate-900 dark:text-slate-100">
-              {MONTH_LABELS[month]}
-            </h2>
+      <div className="flex min-h-screen w-full items-start justify-center bg-slate-50 p-4 dark:bg-slate-950 pt-14 sm:pt-20">
+        <CursorRippleLayer/>
+        <div className="w-full max-w-xl rounded-lg border border-slate-200 bg-white p-4 text-slate-800 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 sm:p-6">
+          <div className="mb-4">
+            <p className="font-mono text-xs uppercase tracking-wider text-slate-500 dark:text-slate-500">{dateLabel}</p>
+            <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">{greeting}</h1>
           </div>
-          <div className="flex items-center gap-1">
-            <button
-              type="button"
-              onClick={() => goToMonth(-1)}
-              aria-label="Previous month"
-              className="rounded-md border border-slate-200 p-2 text-slate-500 outline-none transition-colors hover:border-cyan-500/50 hover:text-cyan-600 focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:border-slate-800 dark:text-slate-400 dark:hover:text-cyan-400 dark:focus-visible:ring-offset-slate-950"
-            >
-              <ChevronLeft />
-            </button>
-            <button
-              type="button"
-              onClick={() => setCursor(new Date(new Date().getFullYear(), new Date().getMonth(), 1))}
-              className="rounded-md border border-slate-200 px-2.5 py-2 font-mono text-[11px] uppercase tracking-wider text-slate-500 outline-none transition-colors hover:border-cyan-500/50 hover:text-cyan-600 focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:border-slate-800 dark:text-slate-400 dark:hover:text-cyan-400 dark:focus-visible:ring-offset-slate-950"
-            >
-              Today
-            </button>
-            <button
-              type="button"
-              onClick={() => goToMonth(1)}
-              aria-label="Next month"
-              className="rounded-md border border-slate-200 p-2 text-slate-500 outline-none transition-colors hover:border-cyan-500/50 hover:text-cyan-600 focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:border-slate-800 dark:text-slate-400 dark:hover:text-cyan-400 dark:focus-visible:ring-offset-slate-950"
-            >
-              <ChevronRight />
-            </button>
+
+          <div className="mb-4 grid grid-cols-2 gap-3">
+            <StatCard icon={Check} value={tasksLeftToday} sub="tasks left today" />
+            <StatCard icon={Flame} value={bestStreak} sub="day streak" />
           </div>
-        </div>
 
-        {error && <p className="mb-3 text-center font-mono text-xs text-red-500 dark:text-red-400">{error}</p>}
+          <div className="mb-4 flex items-center justify-between">
+            <div>
+              <p className="font-mono text-xs uppercase tracking-wider text-slate-500 dark:text-slate-500">
+                {year}
+              </p>
+              <h2 className="font-mono text-lg uppercase tracking-wide text-slate-900 dark:text-slate-100">
+                {MONTH_LABELS[month]}
+              </h2>
+            </div>
+            <div className="flex items-center gap-1">
+              <button
+                  type="button"
+                  onClick={() => goToMonth(-1)}
+                  aria-label="Previous month"
+                  className="rounded-md border border-slate-200 p-2 text-slate-500 outline-none transition-colors hover:border-cyan-500/50 hover:text-cyan-600 focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:border-slate-800 dark:text-slate-400 dark:hover:text-cyan-400 dark:focus-visible:ring-offset-slate-950"
+              >
+                <ChevronLeft />
+              </button>
+              <button
+                  type="button"
+                  onClick={() => setCursor(new Date(new Date().getFullYear(), new Date().getMonth(), 1))}
+                  className="rounded-md border border-slate-200 px-2.5 py-2 font-mono text-[11px] uppercase tracking-wider text-slate-500 outline-none transition-colors hover:border-cyan-500/50 hover:text-cyan-600 focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:border-slate-800 dark:text-slate-400 dark:hover:text-cyan-400 dark:focus-visible:ring-offset-slate-950"
+              >
+                Today
+              </button>
+              <button
+                  type="button"
+                  onClick={() => goToMonth(1)}
+                  aria-label="Next month"
+                  className="rounded-md border border-slate-200 p-2 text-slate-500 outline-none transition-colors hover:border-cyan-500/50 hover:text-cyan-600 focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:border-slate-800 dark:text-slate-400 dark:hover:text-cyan-400 dark:focus-visible:ring-offset-slate-950"
+              >
+                <ChevronRight />
+              </button>
+            </div>
+          </div>
 
-        <div className="mb-4 flex flex-wrap items-center gap-x-4 gap-y-1.5">
-          {habits.map((h) => (
-            <div key={h.id} className="flex items-center gap-1.5">
+          {error && <p className="mb-3 text-center font-mono text-xs text-red-500 dark:text-red-400">{error}</p>}
+
+          <div className="mb-4 flex flex-wrap items-center gap-x-4 gap-y-1.5">
+            {habits.map((h) => (
+                <div key={h.id} className="flex items-center gap-1.5">
               <span
-                className="h-2 w-2 rounded-full ring-1 ring-inset ring-black/10 dark:ring-white/10"
-                style={{ backgroundColor: h.color }}
+                  className="h-2 w-2 rounded-full ring-1 ring-inset ring-black/10 dark:ring-white/10"
+                  style={{ backgroundColor: h.color }}
               />
-              <span className="font-mono text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                  <span className="font-mono text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400">
                 {h.name}
               </span>
-              <button
-                type="button"
-                onClick={() => handleDeleteHabit(h.id)}
-                aria-label={`Delete ${h.name}`}
-                className="shrink-0 rounded p-0.5 text-slate-400 outline-none transition-colors hover:text-red-500 focus-visible:ring-2 focus-visible:ring-cyan-500 dark:text-slate-600 dark:hover:text-red-400"
-              >
-                <X size={10} />
-              </button>
-            </div>
-          ))}
-
-          {isAddingHabit ? (
-            <div className="flex items-center gap-1.5 rounded-md border border-cyan-500/60 bg-cyan-500/10 px-1.5 py-1 focus-within:ring-2 focus-within:ring-cyan-500">
-              <input
-                ref={newHabitInputRef}
-                value={newHabitName}
-                onChange={(e) => setNewHabitName(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") submitAddHabit();
-                  if (e.key === "Escape") cancelAddHabit();
-                }}
-                placeholder="Habit name…"
-                disabled={addingHabit}
-                className="w-24 min-w-0 bg-transparent font-mono text-[11px] text-slate-800 placeholder:text-slate-400 focus:outline-none dark:text-slate-200 dark:placeholder:text-slate-500"
-              />
-              <button
-                type="button"
-                onClick={submitAddHabit}
-                disabled={addingHabit}
-                aria-label="Save habit"
-                className="shrink-0 rounded p-0.5 text-cyan-600 outline-none transition-colors hover:text-cyan-500 focus-visible:ring-2 focus-visible:ring-cyan-500 disabled:opacity-50 dark:text-cyan-400 dark:hover:text-cyan-300"
-              >
-                <Check size={12} />
-              </button>
-              <button
-                type="button"
-                onClick={cancelAddHabit}
-                aria-label="Cancel"
-                className="shrink-0 rounded p-0.5 text-slate-400 outline-none transition-colors hover:text-slate-600 focus-visible:ring-2 focus-visible:ring-cyan-500 dark:text-slate-500 dark:hover:text-slate-300"
-              >
-                <XIcon />
-              </button>
-            </div>
-          ) : (
-            <button
-              type="button"
-              onClick={openAddHabit}
-              aria-label="Add habit"
-              className="flex items-center gap-1 rounded-md border border-dashed border-slate-300 px-1.5 py-1 font-mono text-[11px] uppercase tracking-wider text-slate-500 outline-none transition-colors hover:border-cyan-500/50 hover:text-cyan-600 focus-visible:ring-2 focus-visible:ring-cyan-500 dark:border-slate-700 dark:text-slate-500 dark:hover:text-cyan-400"
-            >
-              <Plus size={12} />
-              Add habit
-            </button>
-          )}
-        </div>
-
-        <div className="mb-1 grid grid-cols-7">
-          {weekdayLabels.map((d) => (
-            <div
-              key={d}
-              className="py-1 text-center font-mono text-[10px] uppercase tracking-wider text-slate-400 dark:text-slate-600"
-            >
-              {d}
-            </div>
-          ))}
-        </div>
-
-        {loading ? (
-          <p className="py-6 text-center font-mono text-xs uppercase tracking-wider text-slate-400 dark:text-slate-500">
-            Loading calendar…
-          </p>
-        ) : (
-          <div className="grid grid-cols-7 gap-1">
-            {weeks.flatMap((week, wi) =>
-              week.map((day, di) => {
-                if (day === null) {
-                  return <div key={`${wi}-${di}`} className="aspect-square" />;
-                }
-                const dateKey = toDateKey(year, month, day);
-                const dayEntries = entriesByDate.get(dateKey) ?? [];
-                const activeHabits = habitsActiveOn(habits, dateKey);
-                const completed = dayEntries.filter(
-                  (e) => e.completed && activeHabits.some((h) => h.id === e.habitId)
-                );
-                const isToday = dateKey === todayKey;
-                const isSelected = dateKey === selectedDay;
-                const ratio = activeHabits.length > 0 ? completed.length / activeHabits.length : 0;
-                const bg = ratio > 0 ? heatColorRGB(ratio, isDark) : null;
-
-                return (
                   <button
-                    key={dateKey}
-                    type="button"
-                    onClick={() => setSelectedDay(dateKey)}
-                    aria-label={`${dateKey}, ${completed.length} of ${activeHabits.length} habits completed`}
-                    style={{ backgroundColor: bg ? rgbToCss(bg) : undefined }}
-                    className={[
-                      "group relative flex aspect-square flex-col items-center justify-center rounded-md border p-1 outline-none transition-colors",
-                      isSelected
-                        ? "border-cyan-500"
-                        : ratio > 0
-                        ? "border-slate-200 hover:border-cyan-500/40 dark:border-slate-800/80"
-                        : "border-slate-200 hover:border-cyan-500/40 hover:bg-slate-100 dark:border-slate-800/80 dark:hover:bg-slate-900",
-                      "focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-950",
-                    ].join(" ")}
+                      type="button"
+                      onClick={() => handleDeleteHabit(h.id)}
+                      aria-label={`Delete ${h.name}`}
+                      className="shrink-0 rounded p-0.5 text-slate-400 outline-none transition-colors hover:text-red-500 focus-visible:ring-2 focus-visible:ring-cyan-500 dark:text-slate-600 dark:hover:text-red-400"
                   >
-                    <span
-                      style={
-                        isToday
-                          ? isDark
-                            ? {
-                                color: "#ffffff",
-                                textShadow:
-                                  "0 0 2px rgba(255,255,255,0.95), 0 0 6px rgba(255,255,255,0.85), 0 0 12px rgba(255,255,255,0.5)",
-                              }
-                            : {
-                                color: "#0e7490",
-                                textShadow:
-                                  "0 0 2px rgba(8,145,178,0.7), 0 0 6px rgba(8,145,178,0.45)",
-                              }
-                          : { color: dateTextColor(bg, isDark) }
+                    <X size={10} />
+                  </button>
+                </div>
+            ))}
+
+            {isAddingHabit ? (
+                <div className="flex items-center gap-1.5 rounded-md border border-cyan-500/60 bg-cyan-500/10 px-1.5 py-1 focus-within:ring-2 focus-within:ring-cyan-500">
+                  <input
+                      ref={newHabitInputRef}
+                      value={newHabitName}
+                      onChange={(e) => setNewHabitName(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") submitAddHabit();
+                        if (e.key === "Escape") cancelAddHabit();
+                      }}
+                      placeholder="Habit name…"
+                      disabled={addingHabit}
+                      className="w-24 min-w-0 bg-transparent font-mono text-[11px] text-slate-800 placeholder:text-slate-400 focus:outline-none dark:text-slate-200 dark:placeholder:text-slate-500"
+                  />
+                  <button
+                      type="button"
+                      onClick={submitAddHabit}
+                      disabled={addingHabit}
+                      aria-label="Save habit"
+                      className="shrink-0 rounded p-0.5 text-cyan-600 outline-none transition-colors hover:text-cyan-500 focus-visible:ring-2 focus-visible:ring-cyan-500 disabled:opacity-50 dark:text-cyan-400 dark:hover:text-cyan-300"
+                  >
+                    <Check size={12} />
+                  </button>
+                  <button
+                      type="button"
+                      onClick={cancelAddHabit}
+                      aria-label="Cancel"
+                      className="shrink-0 rounded p-0.5 text-slate-400 outline-none transition-colors hover:text-slate-600 focus-visible:ring-2 focus-visible:ring-cyan-500 dark:text-slate-500 dark:hover:text-slate-300"
+                  >
+                    <XIcon />
+                  </button>
+                </div>
+            ) : (
+                <button
+                    type="button"
+                    onClick={openAddHabit}
+                    aria-label="Add habit"
+                    className="flex items-center gap-1 rounded-md border border-dashed border-slate-300 px-1.5 py-1 font-mono text-[11px] uppercase tracking-wider text-slate-500 outline-none transition-colors hover:border-cyan-500/50 hover:text-cyan-600 focus-visible:ring-2 focus-visible:ring-cyan-500 dark:border-slate-700 dark:text-slate-500 dark:hover:text-cyan-400"
+                >
+                  <Plus size={12} />
+                  Add habit
+                </button>
+            )}
+          </div>
+
+          <div className="mb-1 grid grid-cols-7">
+            {weekdayLabels.map((d) => (
+                <div
+                    key={d}
+                    className="py-1 text-center font-mono text-[10px] uppercase tracking-wider text-slate-400 dark:text-slate-600"
+                >
+                  {d}
+                </div>
+            ))}
+          </div>
+
+          {loading ? (
+              <p className="py-6 text-center font-mono text-xs uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                Loading calendar…
+              </p>
+          ) : (
+              <div className="grid grid-cols-7 gap-1">
+                {weeks.flatMap((week, wi) =>
+                    week.map((day, di) => {
+                      if (day === null) {
+                        return <div key={`${wi}-${di}`} className="aspect-square" />;
                       }
-                      className="font-mono text-[11px] font-semibold [text-shadow:0_1px_2px_rgb(0_0_0_/_0.35)]"
+                      const dateKey = toDateKey(year, month, day);
+                      const dayEntries = entriesByDate.get(dateKey) ?? [];
+                      const activeHabits = habitsActiveOn(habits, dateKey);
+                      const completed = dayEntries.filter(
+                          (e) => e.completed && activeHabits.some((h) => h.id === e.habitId)
+                      );
+                      const isToday = dateKey === todayKey;
+                      const isSelected = dateKey === selectedDay;
+                      const ratio = activeHabits.length > 0 ? completed.length / activeHabits.length : 0;
+                      const bg = ratio > 0 ? heatColorRGB(ratio, isDark) : null;
+
+                      return (
+                          <button
+                              key={dateKey}
+                              type="button"
+                              onClick={() => setSelectedDay(dateKey)}
+                              aria-label={`${dateKey}, ${completed.length} of ${activeHabits.length} habits completed`}
+                              style={{ backgroundColor: bg ? rgbToCss(bg) : undefined }}
+                              className={[
+                                "group relative flex aspect-square flex-col items-center justify-center rounded-md border p-1 outline-none transition-colors",
+                                isSelected
+                                    ? "border-cyan-500"
+                                    : ratio > 0
+                                        ? "border-slate-200 hover:border-cyan-500/40 dark:border-slate-800/80"
+                                        : "border-slate-200 hover:border-cyan-500/40 hover:bg-slate-100 dark:border-slate-800/80 dark:hover:bg-slate-900",
+                                "focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-950",
+                              ].join(" ")}
+                          >
+                    <span
+                        style={
+                          isToday
+                              ? isDark
+                                  ? {
+                                    color: "#ffffff",
+                                    textShadow:
+                                        "0 0 2px rgba(255,255,255,0.95), 0 0 6px rgba(255,255,255,0.85), 0 0 12px rgba(255,255,255,0.5)",
+                                  }
+                                  : {
+                                    color: "#0e7490",
+                                    textShadow:
+                                        "0 0 2px rgba(8,145,178,0.7), 0 0 6px rgba(8,145,178,0.45)",
+                                  }
+                              : { color: dateTextColor(bg, isDark) }
+                        }
+                        className="font-mono text-[11px] font-semibold [text-shadow:0_1px_2px_rgb(0_0_0_/_0.35)]"
                     >
                       {day}
                     </span>
+                          </button>
+                      );
+                    })
+                )}
+              </div>
+          )}
+
+          {selectedDay && (
+              <div className="mt-4 rounded-md border border-slate-200 bg-slate-100 p-3 dark:border-slate-800 dark:bg-slate-900/60">
+                <div className="mb-2 flex items-center justify-between">
+                  <p className="font-mono text-xs uppercase tracking-wider text-slate-600 dark:text-slate-300">
+                    {selectedDay}
+                  </p>
+                  <button
+                      type="button"
+                      onClick={() => setSelectedDay(null)}
+                      aria-label="Close detail"
+                      className="rounded p-1 text-slate-400 outline-none transition-colors hover:text-cyan-600 focus-visible:ring-2 focus-visible:ring-cyan-500 dark:text-slate-500 dark:hover:text-cyan-400"
+                  >
+                    <XIcon />
                   </button>
-                );
-              })
-            )}
-          </div>
-        )}
+                </div>
 
-        {selectedDay && (
-          <div className="mt-4 rounded-md border border-slate-200 bg-slate-100 p-3 dark:border-slate-800 dark:bg-slate-900/60">
-            <div className="mb-2 flex items-center justify-between">
-              <p className="font-mono text-xs uppercase tracking-wider text-slate-600 dark:text-slate-300">
-                {selectedDay}
-              </p>
-              <button
-                type="button"
-                onClick={() => setSelectedDay(null)}
-                aria-label="Close detail"
-                className="rounded p-1 text-slate-400 outline-none transition-colors hover:text-cyan-600 focus-visible:ring-2 focus-visible:ring-cyan-500 dark:text-slate-500 dark:hover:text-cyan-400"
-              >
-                <XIcon />
-              </button>
-            </div>
-
-            {selectedActiveHabits.length === 0 ? (
-              <p className="font-mono text-xs text-slate-400 dark:text-slate-500">No habits yet.</p>
-            ) : (
-              <ul className="space-y-1.5">
-                {selectedActiveHabits.map((h) => {
-                  const entry = selectedEntries.find((e) => e.habitId === h.id);
-                  const done = entry?.completed ?? false;
-                  const key = `${h.id}:${selectedDay}`;
-                  const isToggling = togglingKey === key;
-                  return (
-                    <li key={h.id}>
-                      <button
-                        type="button"
-                        onClick={() => handleToggleHabitOnDate(h.id, selectedDay)}
-                        disabled={isToggling}
-                        className="flex w-full items-center gap-2 rounded-md p-1 outline-none transition-colors hover:bg-slate-200/60 focus-visible:ring-2 focus-visible:ring-cyan-500 disabled:opacity-50 dark:hover:bg-slate-800/60"
-                      >
+                {selectedActiveHabits.length === 0 ? (
+                    <p className="font-mono text-xs text-slate-400 dark:text-slate-500">No habits yet.</p>
+                ) : (
+                    <ul className="space-y-1.5">
+                      {selectedActiveHabits.map((h) => {
+                        const entry = selectedEntries.find((e) => e.habitId === h.id);
+                        const done = entry?.completed ?? false;
+                        const key = `${h.id}:${selectedDay}`;
+                        const isToggling = togglingKey === key;
+                        return (
+                            <li key={h.id}>
+                              <button
+                                  type="button"
+                                  onClick={() => handleToggleHabitOnDate(h.id, selectedDay)}
+                                  disabled={isToggling}
+                                  className="flex w-full items-center gap-2 rounded-md p-1 outline-none transition-colors hover:bg-slate-200/60 focus-visible:ring-2 focus-visible:ring-cyan-500 disabled:opacity-50 dark:hover:bg-slate-800/60"
+                              >
                         <span
-                          className="h-2 w-2 shrink-0 rounded-full ring-1 ring-inset ring-black/10 dark:ring-white/10"
-                          style={{ backgroundColor: h.color, opacity: done ? 1 : 0.25 }}
+                            className="h-2 w-2 shrink-0 rounded-full ring-1 ring-inset ring-black/10 dark:ring-white/10"
+                            style={{ backgroundColor: h.color, opacity: done ? 1 : 0.25 }}
                         />
-                        <span
-                          className={[
-                            "font-mono text-xs uppercase tracking-wide",
-                            done ? "text-slate-800 dark:text-slate-200" : "text-slate-400 dark:text-slate-600",
-                          ].join(" ")}
-                        >
+                                <span
+                                    className={[
+                                      "font-mono text-xs uppercase tracking-wide",
+                                      done ? "text-slate-800 dark:text-slate-200" : "text-slate-400 dark:text-slate-600",
+                                    ].join(" ")}
+                                >
                           {h.name}
                         </span>
-                        {done && (
-                          <span className="ml-auto font-mono text-[10px] uppercase tracking-wider text-cyan-600 dark:text-cyan-400">
+                                {done && (
+                                    <span className="ml-auto font-mono text-[10px] uppercase tracking-wider text-cyan-600 dark:text-cyan-400">
                             Done
                           </span>
-                        )}
-                      </button>
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
-          </div>
-        )}
+                                )}
+                              </button>
+                            </li>
+                        );
+                      })}
+                    </ul>
+                )}
+              </div>
+          )}
+        </div>
       </div>
-    </div>
   );
 }
 
 function ChevronLeft() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-      <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
   );
 }
 
 function ChevronRight() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-      <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
   );
 }
 
 function XIcon() {
   return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-      <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
   );
 }
 
@@ -716,14 +716,14 @@ interface StatCardProps {
 
 function StatCard({ icon: IconCmp, value, sub }: StatCardProps) {
   return (
-    <div className="flex items-center gap-3 rounded-md border border-slate-200 bg-slate-100/60 p-3 dark:border-slate-800 dark:bg-slate-900/60">
-      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-cyan-500/10 text-cyan-600 dark:text-cyan-400">
-        <IconCmp size={16} strokeWidth={2.25} />
+      <div className="flex items-center gap-3 rounded-md border border-slate-200 bg-slate-100/60 p-3 dark:border-slate-800 dark:bg-slate-900/60">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-cyan-500/10 text-cyan-600 dark:text-cyan-400">
+          <IconCmp size={16} strokeWidth={2.25} />
+        </div>
+        <div className="min-w-0">
+          <p className="text-xl font-bold tabular-nums leading-tight text-slate-900 dark:text-slate-100">{value}</p>
+          <p className="truncate font-mono text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-500">{sub}</p>
+        </div>
       </div>
-      <div className="min-w-0">
-        <p className="text-xl font-bold tabular-nums leading-tight text-slate-900 dark:text-slate-100">{value}</p>
-        <p className="truncate font-mono text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-500">{sub}</p>
-      </div>
-    </div>
   );
 }

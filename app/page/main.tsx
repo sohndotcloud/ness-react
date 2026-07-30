@@ -4,7 +4,6 @@ import {useRef} from "react";
 import {useBar} from "~/context/bottombar-context";
 import {useTheme} from "~/context/theme-context";
 import Sidebar from "~/components/sidebar";
-import MobileBlockOverlay from "~/components/mobile-overlay";
 import Bottombar from "~/components/bottombar";
 import HabitCalendar from "~/components/habit-calendar";
 
@@ -49,11 +48,11 @@ export function Main() {
                     />
                 }
                 <div className="relative flex-1 min-h-0 overflow-y-auto">
-                    <Sidebar />
-                    <DarkModeToggle />
+                    <div className="relative z-30">
+                        <DarkModeToggle />
+                    </div>
                     <HabitCalendar/>
                 </div>
-                <MobileBlockOverlay />
                 <Bottombar />
             </div>
         </main>
