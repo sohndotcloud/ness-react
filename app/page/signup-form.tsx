@@ -2,6 +2,12 @@ import { useState } from "react";
 import type { FormEvent } from "react";
 import {Link, useNavigate} from "react-router";
 import { useAuth } from "../context/AuthContext";
+import axios from "axios";
+
+interface ApiErrorResponse {
+    message: string;
+    timestamp: string;
+}
 
 function SignUpForm() {
     const { register } = useAuth();
@@ -16,7 +22,18 @@ function SignUpForm() {
             await register(email, password);
             navigate("/");
         } catch (err) {
-            setError("Something went wrong. Try again.");
+            let message = "An unexpected error occurred.";
+
+            if (axios.isAxiosError(err)) {
+                const data = err.response?.data as { message?: string } | undefined;
+                message = data?.message ?? err.message;
+            } else if (err instanceof Error) {
+                message = err.message;
+            } else if (typeof err === "string") {
+                message = err;
+            }
+
+            setError(message);
         }
     };
 
