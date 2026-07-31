@@ -1,21 +1,19 @@
 import DarkModeToggle from "~/components/darkmode";
 import HabitTracker from "~/components/habit-tracker";
 import {useRef} from "react";
-import {useNavigate} from "react-router";
 import {useBar} from "~/context/bottombar-context";
 import {useTheme} from "~/context/theme-context";
 import Sidebar from "~/components/sidebar";
 import Bottombar from "~/components/bottombar";
 import HabitCalendar from "~/components/habit-calendar";
-import axiosClient from "~/api/axiosClient"; // adjust to match your actual path
-import { setAccessToken } from "~/api/tokenStore"; // adjust to match your actual path
+import {Form} from "react-router";
+import TopControls from "~/components/top-controls";
 
 export function Main() {
     const containerRef = useRef<HTMLDivElement>(null);
     const lastSpawn = useRef(0);
     const { isPlaying } = useBar();
     const { isDark } = useTheme();
-    const navigate = useNavigate();
 
     function handlePointerMove(e: React.PointerEvent<HTMLDivElement>) {
         const now = Date.now();
@@ -30,16 +28,6 @@ export function Main() {
         ripple.style.top = `${y}px`;
         containerRef.current?.appendChild(ripple);
         setTimeout(() => ripple.remove(), 900);
-    }
-
-    async function handleLogout() {
-        try {
-            await axiosClient.post("/auth/logout");
-        } catch {
-            // ignore — clear client state and redirect regardless
-        }
-        setAccessToken(null);
-        navigate("/login");
     }
 
     return (
@@ -62,15 +50,7 @@ export function Main() {
                     />
                 }
                 <div className="relative flex-1 min-h-0 overflow-y-auto">
-                    <div className="relative z-30">
-                        <button
-                            onClick={handleLogout}
-                            className="absolute top-[19px] right-[88px] z-20 text-xs font-medium uppercase tracking-[0.15em] text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-cyan-400"
-                        >
-                            Log out
-                        </button>
-                        <DarkModeToggle />
-                    </div>
+                    <TopControls/>
                     <HabitCalendar/>
                 </div>
                 <Bottombar />
