@@ -118,7 +118,7 @@ async function fetchHabitLogs(habitId: string, days: number): Promise<HabitLogRe
 
 async function createHabitLog(
     habitId: string,
-    logRequest: HabitLogRequest
+    logRequest: { count: number; date: string }
 ): Promise<HabitLogResponse | undefined> {
   try {
     const res = await axiosClient.post<HabitLogResponse>(`/habits/${habitId}/logs`, logRequest);
@@ -404,7 +404,7 @@ export default function HabitCalendar({
           setEntries((prev) => [...prev, { habitId, date: dateKey, completed: true }]);
         }
       } else {
-        const created = await createHabitLog(habitId, { count: 1, logDate: dateKey });
+        const created = await createHabitLog(habitId, { count: 1, date: dateKey });
         if (!created) {
           setEntries((prev) => prev.filter((e) => !(e.habitId === habitId && e.date === dateKey)));
         }
