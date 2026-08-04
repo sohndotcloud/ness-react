@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 import {Link, useNavigate} from "react-router";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/auth-context";
 import axios from "axios";
 
 interface ApiErrorResponse {
