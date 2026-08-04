@@ -80,7 +80,14 @@ export default function Login() {
 
                     <LoginForm />
                 </div>
-
+                <div className="flex justify-end">
+                    <Link
+                        to="/forgot-password"
+                        className="text-sm hover:underline"
+                    >
+                        Forgot password?
+                    </Link>
+                </div>
                 <p className="mt-6 text-center text-xs uppercase tracking-[0.15em] font-mono text-slate-400 dark:text-slate-500">
                     <Link
                         to="/signup"

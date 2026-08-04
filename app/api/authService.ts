@@ -32,3 +32,14 @@ export const authService = {
     return !!getAccessToken();
   },
 };
+
+export async function requestPasswordReset(email: string): Promise<void> {
+  await axiosClient.post("/auth/password-reset/request", { email });
+}
+
+export async function confirmPasswordReset(
+    token: string,
+    newPassword: string
+): Promise<void> {
+  await axiosClient.post("/auth/password-reset/confirm", { token, newPassword });
+}

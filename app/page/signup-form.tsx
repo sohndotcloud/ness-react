@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 import {Link, useNavigate} from "react-router";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/auth-context";
 
 function SignUpForm() {
     const { register } = useAuth();
@@ -16,7 +16,7 @@ function SignUpForm() {
             await register(email, password);
             navigate("/");
         } catch (err) {
-            setError("Something went wrong. Try again.");
+            setError();
         }
     };
 

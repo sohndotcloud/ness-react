@@ -1,6 +1,6 @@
 // app/components/top-controls.tsx
 import { useNavigate } from "react-router";
-import { useAuth } from "~/context/AuthContext";
+import { useAuth } from "~/context/auth-context";
 import DarkModeToggle from "~/components/darkmode";
 
 export default function TopControls() {
