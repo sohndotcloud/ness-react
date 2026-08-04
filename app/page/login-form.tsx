@@ -21,10 +21,7 @@ function LoginForm() {
         setError("");
         try {
             await login(email, password);
-            // no navigate() here — the effect above fires once
-            // isAuthenticated actually flips to true
         } catch (err) {
-            console.error("login failed:", err);
             setError(err instanceof Error ? err.message : "Login failed");
         }
     };
@@ -44,7 +41,7 @@ function LoginForm() {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="you@example.com"
+                    placeholder="Email"
                     className="w-full rounded-md border px-3 py-2.5 text-sm outline-none transition-colors"
                     style={{
                         borderColor: "#D8D3C7",

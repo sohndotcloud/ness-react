@@ -1,7 +1,6 @@
 import { Outlet, redirect } from "react-router";
 import type { Route } from "./+types/protected-layout";
 import { authService } from "~/api/authService";
-import { getAccessToken } from "~/api/tokenStore";
 import axiosClient from "~/api/axiosClient";
 
 export async function clientLoader({}: Route.ClientLoaderArgs) {

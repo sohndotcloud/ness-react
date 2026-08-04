@@ -41,7 +41,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
     const token = data?.accessToken;
 
     if (!token) {
-        return { error: "Service is down." };
+        return { error: "Service is down" };
     }
 
     return redirect("/");

@@ -1,7 +1,13 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 import {Link, useNavigate} from "react-router";
-import { useAuth } from "../context/auth-context";
+import { useAuth } from "../context/AuthContext";
+import axios from "axios";
+
+interface ApiErrorResponse {
+    message: string;
+    timestamp: string;
+}
 
 function SignUpForm() {
     const { register } = useAuth();
@@ -16,7 +22,18 @@ function SignUpForm() {
             await register(email, password);
             navigate("/");
         } catch (err) {
-            setError();
+            let message = "An unexpected error occurred.";
+
+            if (axios.isAxiosError(err)) {
+                const data = err.response?.data as { message?: string } | undefined;
+                message = data?.message ?? err.message;
+            } else if (err instanceof Error) {
+                message = err.message;
+            } else if (typeof err === "string") {
+                message = err;
+            }
+
+            setError(message);
         }
     };
 
@@ -35,7 +52,7 @@ function SignUpForm() {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="you@example.com"
+                    placeholder="Email"
                     className="w-full rounded-md border px-3 py-2.5 text-sm outline-none transition-colors"
                     style={{
                         borderColor: "#D8D3C7",
