@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Check, Flame, Plus, X, type LucideIcon } from "lucide-react";
 import axiosClient from "~/api/axiosClient";
 import { useTheme } from "~/context/theme-context";
+import { useHabitsRefresh } from "~/context/habits-refresh-context";
 import CursorRippleLayer from "~/components/ripple-effect";
 
 export interface Habit {
@@ -259,6 +260,7 @@ export default function HabitCalendar({
   const [addingHabit, setAddingHabit] = useState<boolean>(false);
   const newHabitInputRef = useRef<HTMLInputElement>(null);
   const isDark = useTheme().isDark;
+  const { refreshToken } = useHabitsRefresh();
 
   const year = cursor.getFullYear();
   const month = cursor.getMonth();
@@ -301,7 +303,7 @@ export default function HabitCalendar({
     return () => {
       cancelled = true;
     };
-  }, [year, month]);
+  }, [year, month, refreshToken]);
 
   const weekdayLabels = weekStartsOn === 1 ? WEEKDAY_LABELS_MON : WEEKDAY_LABELS_SUN;
   const weeks = useMemo(

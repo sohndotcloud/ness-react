@@ -14,6 +14,7 @@ import {PdfProvider} from "~/context/pdf-context";
 import {BarProvider} from "~/context/bottombar-context";
 import {ThemeProvider} from "~/context/theme-context";
 import {AuthProvider} from "~/context/auth-context";
+import {HabitsRefreshProvider} from "~/context/habits-refresh-context";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -53,7 +54,9 @@ export default function App() {
       <BarProvider>
       <PdfProvider>
       <SideBarProvider>
+          <HabitsRefreshProvider>
       <Outlet />
+          </HabitsRefreshProvider>
       </SideBarProvider>
       </PdfProvider>
       </BarProvider>

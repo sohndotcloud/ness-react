@@ -3,6 +3,7 @@ import { useSideBar } from "~/context/sidebar-context";
 import { useNavigate } from "react-router";
 import { authService } from "~/api/authService";
 import axiosClient from "~/api/axiosClient";
+import { useHabitsRefresh } from "~/context/habits-refresh-context";
 
 interface SignalContact {
     name: string;
@@ -12,6 +13,7 @@ interface SignalContact {
 export default function Sidebar() {
     const { sideMenu, setSideMenu, toggleSideMenu } = useSideBar();
     const navigate = useNavigate();
+    const { triggerRefresh } = useHabitsRefresh();
 
     const [habitName, setHabitName] = useState("");
     const [notify, setNotify] = useState(false);
@@ -58,6 +60,7 @@ export default function Sidebar() {
             setHabitName("");
             setNotify(false);
             setSelectedContacts([]);
+            triggerRefresh();
         } catch (err) {
             console.error("Failed to add habit", err);
         } finally {
