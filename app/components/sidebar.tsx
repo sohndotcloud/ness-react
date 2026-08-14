@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSideBar } from "~/context/sidebar-context";
 import { useNavigate } from "react-router";
 import { authService } from "~/api/authService";
@@ -10,9 +10,15 @@ interface SignalContact {
     number: string;
 }
 
+interface VerifiedResponse {
+    registered: boolean;
+    number: string;
+}
+
 export default function Sidebar() {
     const { sideMenu, setSideMenu, toggleSideMenu } = useSideBar();
     const navigate = useNavigate();
+    const [qrUrl, setQrUrl] = useState<string | null>(null);
     const { triggerRefresh } = useHabitsRefresh();
 
     const [habitName, setHabitName] = useState("");
@@ -21,18 +27,81 @@ export default function Sidebar() {
     const [contacts, setContacts] = useState<SignalContact[]>([]);
     const [loadingContacts, setLoadingContacts] = useState(false);
     const [submitting, setSubmitting] = useState(false);
+    const [verified, setVerified] = useState(false);
 
+    const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+    // Initial check: is the account verified, and load contacts or QR code accordingly.
     useEffect(() => {
         if (!notify || contacts.length > 0) return;
 
         setLoadingContacts(true);
         const url = import.meta.env.VITE_API_DOMAIN + "/contacts";
+
         axiosClient
-            .get<SignalContact[]>(url)
-            .then((res) => setContacts(res.data))
-            .catch((err) => console.error("Failed to load Signal contacts", err))
+            .get<VerifiedResponse>("/verify/status")
+            .then((res) => {
+                setVerified(res.data.registered);
+
+                if (res.data.registered) {
+                    return axiosClient
+                        .get<SignalContact[]>(url)
+                        .then((r) => setContacts(r.data));
+                } else {
+                    return axiosClient
+                        .get("/verify/qrcode", { responseType: "blob" })
+                        .then((r) => {
+                            const objectUrl = URL.createObjectURL(r.data);
+                            setQrUrl(objectUrl);
+                        });
+                }
+            })
+            .catch((err) => console.error("Failed to check Signal status", err))
             .finally(() => setLoadingContacts(false));
     }, [notify, contacts.length]);
+
+    // Poll every 5 seconds while notify is on and not yet verified,
+    // so the UI flips to the contacts view once the QR code is scanned.
+    // Uses a ref (not just the cleanup fn) so re-renders don't spawn duplicate intervals.
+    useEffect(() => {
+        if (!notify || verified) {
+            if (pollingRef.current) {
+                clearInterval(pollingRef.current);
+                pollingRef.current = null;
+            }
+            return;
+        }
+
+        if (pollingRef.current) return; // already polling
+
+        pollingRef.current = setInterval(() => {
+            axiosClient
+                .get<VerifiedResponse>("/verify/status")
+                .then((res) => {
+                    if (res.data.registered) {
+                        setVerified(true);
+                        const url = import.meta.env.VITE_API_DOMAIN + "/contacts";
+                        return axiosClient
+                            .get<SignalContact[]>(url)
+                            .then((r) => setContacts(r.data));
+                    }
+                })
+                .catch((err) => console.error("Failed to poll Signal status", err));
+        }, 5000);
+
+        return () => {
+            if (pollingRef.current) {
+                clearInterval(pollingRef.current);
+                pollingRef.current = null;
+            }
+        };
+    }, [notify, verified]);
+
+    useEffect(() => {
+        return () => {
+            if (qrUrl) URL.revokeObjectURL(qrUrl);
+        };
+    }, [qrUrl]);
 
     async function endTokenSession() {
         toggleSideMenu();
@@ -130,39 +199,61 @@ export default function Sidebar() {
 
                         {notify && (
                             <div className="flex flex-col gap-1">
-                                <span className="text-xs font-mono uppercase tracking-wide text-slate-500 dark:text-slate-400">
-                                    Contacts
-                                </span>
-                                <div className="w-full max-h-40 overflow-y-auto rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 divide-y divide-slate-200 dark:divide-slate-800">
-                                    {loadingContacts && (
-                                        <div className="px-3 py-2 text-sm text-slate-400 dark:text-slate-600">
-                                            Loading contacts...
+                                {verified ? (
+                                    <>
+                                        <span className="text-xs font-mono uppercase tracking-wide text-slate-500 dark:text-slate-400">
+                                            Contacts
+                                        </span>
+                                        <div className="w-full max-h-40 overflow-y-auto rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 divide-y divide-slate-200 dark:divide-slate-800">
+                                            {loadingContacts && (
+                                                <div className="px-3 py-2 text-sm text-slate-400 dark:text-slate-600">
+                                                    Loading contacts...
+                                                </div>
+                                            )}
+                                            {!loadingContacts && contacts.length === 0 && (
+                                                <div className="px-3 py-2 text-sm text-slate-400 dark:text-slate-600">
+                                                    No contacts found
+                                                </div>
+                                            )}
+                                            {contacts.map((c) => (
+                                                <label
+                                                    key={c.number}
+                                                    className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 dark:text-slate-200 cursor-pointer select-none hover:bg-cyan-500/10"
+                                                >
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={selectedContacts.includes(c.number)}
+                                                        onChange={() => toggleContact(c.number)}
+                                                        className="w-4 h-4 rounded accent-cyan-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-400"
+                                                    />
+                                                    {c.name || c.number}
+                                                </label>
+                                            ))}
                                         </div>
-                                    )}
-                                    {!loadingContacts && contacts.length === 0 && (
-                                        <div className="px-3 py-2 text-sm text-slate-400 dark:text-slate-600">
-                                            No contacts found
-                                        </div>
-                                    )}
-                                    {contacts.map((c) => (
-                                        <label
-                                            key={c.number}
-                                            className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 dark:text-slate-200 cursor-pointer select-none hover:bg-cyan-500/10"
-                                        >
-                                            <input
-                                                type="checkbox"
-                                                checked={selectedContacts.includes(c.number)}
-                                                onChange={() => toggleContact(c.number)}
-                                                className="w-4 h-4 rounded accent-cyan-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-400"
+                                        {selectedContacts.length > 0 && (
+                                            <span className="text-xs text-slate-500 dark:text-slate-400">
+                                                {selectedContacts.length} selected
+                                            </span>
+                                        )}
+                                    </>
+                                ) : (
+                                    <div className="flex flex-col items-center gap-2 py-2">
+                                        <span className="text-xs font-mono uppercase tracking-wide text-slate-500 dark:text-slate-400">
+                                            Scan to link Signal
+                                        </span>
+                                        {loadingContacts && (
+                                            <div className="text-sm text-slate-400 dark:text-slate-600">
+                                                Loading QR code...
+                                            </div>
+                                        )}
+                                        {!loadingContacts && qrUrl && (
+                                            <img
+                                                src={qrUrl}
+                                                alt="Signal QR code"
+                                                className="w-40 h-40 rounded-md border border-slate-300 dark:border-slate-700"
                                             />
-                                            {c.name || c.number}
-                                        </label>
-                                    ))}
-                                </div>
-                                {selectedContacts.length > 0 && (
-                                    <span className="text-xs text-slate-500 dark:text-slate-400">
-                                        {selectedContacts.length} selected
-                                    </span>
+                                        )}
+                                    </div>
                                 )}
                             </div>
                         )}

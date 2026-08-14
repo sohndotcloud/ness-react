@@ -31,11 +31,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const register = async (
       email: string,
-      password: string,
+      name: string,
       phoneNumber: string,
-      timezone?: string
+      password: string
   ): Promise<void> => {
-    await authService.register(email, password, phoneNumber, timezone);
+    await authService.register({ email, password, name, phoneNumber });
     setIsAuthenticated(true);
   };
 

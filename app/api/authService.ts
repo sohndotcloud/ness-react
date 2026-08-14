@@ -3,14 +3,14 @@ import type { AuthResponse } from "../types/auth";
 import { getAccessToken, setAccessToken } from "./tokenStore";
 
 export const authService = {
-  async register(email: string, password: string, name: string, phoneNumber: string, timezone?: string): Promise<void> {
-    const response = await axiosClient.post<AuthResponse>("/auth/register", {
-      email,
-      password,
-      name,
-      phoneNumber,
-      timezone,
-    });
+  async register(params: {
+    email: string;
+    password: string;
+    name: string;
+    phoneNumber: string;
+    timezone?: string;
+  }): Promise<void> {
+    const response = await axiosClient.post<AuthResponse>("/auth/register", params);
     setAccessToken(response.data.accessToken);
   },
 
