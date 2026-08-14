@@ -114,7 +114,7 @@ function SignUpForm() {
                     type="tel"
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
-                    placeholder="+1 555 123 4567"
+                    placeholder="+15551234567"
                     className="w-full rounded-md border px-3 py-2.5 text-sm outline-none transition-colors"
                     style={{
                         borderColor: "#D8D3C7",
