@@ -14,12 +14,15 @@ function SignUpForm() {
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [name, setName] = useState("");
+
+    const [phoneNumber, setPhoneNumber] = useState("");
     const [error, setError] = useState("");
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            await register(email, password);
+            await register(email, name, phoneNumber, password);
             navigate("/");
         } catch (err) {
             let message = "An unexpected error occurred.";
@@ -69,7 +72,65 @@ function SignUpForm() {
                     }}
                 />
             </div>
-
+            <div>
+                <label
+                    htmlFor="name"
+                    className="mb-1.5 block text-xs font-medium uppercase tracking-wide"
+                    style={{ color: "#6B7280" }}
+                >
+                    Name
+                </label>
+                <input
+                    id="name"
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full rounded-md border px-3 py-2.5 text-sm outline-none transition-colors"
+                    style={{
+                        borderColor: "#D8D3C7",
+                        backgroundColor: "#FAFAF8",
+                        color: "#20232B",
+                    }}
+                    onFocus={(e) => {
+                        e.currentTarget.style.borderColor = "#20232B";
+                        e.currentTarget.style.backgroundColor = "#FFFFFF";
+                    }}
+                    onBlur={(e) => {
+                        e.currentTarget.style.borderColor = "#D8D3C7";
+                        e.currentTarget.style.backgroundColor = "#FAFAF8";
+                    }}
+                />
+            </div>
+            <div>
+                <label
+                    htmlFor="phoneNumber"
+                    className="mb-1.5 block text-xs font-medium uppercase tracking-wide"
+                    style={{ color: "#6B7280" }}
+                >
+                    Phone Number
+                </label>
+                <input
+                    id="phoneNumber"
+                    type="tel"
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    placeholder="+1 555 123 4567"
+                    className="w-full rounded-md border px-3 py-2.5 text-sm outline-none transition-colors"
+                    style={{
+                        borderColor: "#D8D3C7",
+                        backgroundColor: "#FAFAF8",
+                        color: "#20232B",
+                    }}
+                    onFocus={(e) => {
+                        e.currentTarget.style.borderColor = "#20232B";
+                        e.currentTarget.style.backgroundColor = "#FFFFFF";
+                    }}
+                    onBlur={(e) => {
+                        e.currentTarget.style.borderColor = "#D8D3C7";
+                        e.currentTarget.style.backgroundColor = "#FAFAF8";
+                    }}
+                />
+            </div>
             <div>
                 <label
                     htmlFor="password"

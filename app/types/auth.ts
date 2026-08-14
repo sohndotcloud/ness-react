@@ -16,6 +16,6 @@ export interface LoginPayload {
 export interface AuthContextValue {
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, timezone?: string) => Promise<void>;
+  register: (email: string, password: string, phoneNumber: string, timezone?: string) => Promise<void>;
   logout: () => Promise<void>;
 }

@@ -32,9 +32,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const register = async (
       email: string,
       password: string,
+      phoneNumber: string,
       timezone?: string
   ): Promise<void> => {
-    await authService.register(email, password, timezone);
+    await authService.register(email, password, phoneNumber, timezone);
     setIsAuthenticated(true);
   };
 
