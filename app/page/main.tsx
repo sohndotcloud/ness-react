@@ -1,5 +1,4 @@
 import DarkModeToggle from "~/components/darkmode";
-import HabitTracker from "~/components/habit-tracker";
 import {useRef} from "react";
 import {useBar} from "~/context/bottombar-context";
 import {useTheme} from "~/context/theme-context";
@@ -50,6 +49,7 @@ export function Main() {
                     />
                 }
                 <div className="relative flex-1 min-h-0 overflow-y-auto">
+                    <Sidebar/>
                     <TopControls/>
                     <HabitCalendar/>
                 </div>

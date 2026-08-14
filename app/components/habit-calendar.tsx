@@ -383,6 +383,10 @@ export default function HabitCalendar({
   }
 
   async function handleToggleHabitOnDate(habitId: string, dateKey: string) {
+    if (dateKey !== todayKey) {
+      return;
+    }
+
     const key = `${habitId}:${dateKey}`;
     if (togglingKey) return;
     setTogglingKey(key);
@@ -499,50 +503,6 @@ export default function HabitCalendar({
                   </button>
                 </div>
             ))}
-
-            {isAddingHabit ? (
-                <div className="flex items-center gap-1.5 rounded-md border border-cyan-500/60 bg-cyan-500/10 px-1.5 py-1 focus-within:ring-2 focus-within:ring-cyan-500">
-                  <input
-                      ref={newHabitInputRef}
-                      value={newHabitName}
-                      onChange={(e) => setNewHabitName(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") submitAddHabit();
-                        if (e.key === "Escape") cancelAddHabit();
-                      }}
-                      placeholder="Habit name…"
-                      disabled={addingHabit}
-                      className="w-24 min-w-0 bg-transparent font-mono text-[11px] text-slate-800 placeholder:text-slate-400 focus:outline-none dark:text-slate-200 dark:placeholder:text-slate-500"
-                  />
-                  <button
-                      type="button"
-                      onClick={submitAddHabit}
-                      disabled={addingHabit}
-                      aria-label="Save habit"
-                      className="shrink-0 rounded p-0.5 text-cyan-600 outline-none transition-colors hover:text-cyan-500 focus-visible:ring-2 focus-visible:ring-cyan-500 disabled:opacity-50 dark:text-cyan-400 dark:hover:text-cyan-300"
-                  >
-                    <Check size={12} />
-                  </button>
-                  <button
-                      type="button"
-                      onClick={cancelAddHabit}
-                      aria-label="Cancel"
-                      className="shrink-0 rounded p-0.5 text-slate-400 outline-none transition-colors hover:text-slate-600 focus-visible:ring-2 focus-visible:ring-cyan-500 dark:text-slate-500 dark:hover:text-slate-300"
-                  >
-                    <XIcon />
-                  </button>
-                </div>
-            ) : (
-                <button
-                    type="button"
-                    onClick={openAddHabit}
-                    aria-label="Add habit"
-                    className="flex items-center gap-1 rounded-md border border-dashed border-slate-300 px-1.5 py-1 font-mono text-[11px] uppercase tracking-wider text-slate-500 outline-none transition-colors hover:border-cyan-500/50 hover:text-cyan-600 focus-visible:ring-2 focus-visible:ring-cyan-500 dark:border-slate-700 dark:text-slate-500 dark:hover:text-cyan-400"
-                >
-                  <Plus size={12} />
-                  Add habit
-                </button>
-            )}
           </div>
 
           <div className="mb-1 grid grid-cols-7">
@@ -642,7 +602,7 @@ export default function HabitCalendar({
                     <p className="font-mono text-xs text-slate-400 dark:text-slate-500">No habits yet.</p>
                 ) : (
                     <ul className="space-y-1.5">
-                      {selectedActiveHabits.map((h) => {
+                      { selectedActiveHabits.map((h) => {
                         const entry = selectedEntries.find((e) => e.habitId === h.id);
                         const done = entry?.completed ?? false;
                         const key = `${h.id}:${selectedDay}`;

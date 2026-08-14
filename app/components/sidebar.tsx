@@ -1,22 +1,68 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSideBar } from "~/context/sidebar-context";
 import { useNavigate } from "react-router";
 import { authService } from "~/api/authService";
+import axiosClient from "~/api/axiosClient";
 
-const NAV_ITEMS = [
-    { label: "Library", href: "/library" },
-    { label: "Music", href: "/music" },
-    { label: "Drive", href: "/drive" },
-];
+interface SignalContact {
+    name: string;
+    number: string;
+}
 
 export default function Sidebar() {
     const { sideMenu, setSideMenu, toggleSideMenu } = useSideBar();
     const navigate = useNavigate();
 
+    const [habitName, setHabitName] = useState("");
+    const [notify, setNotify] = useState(false);
+    const [selectedContacts, setSelectedContacts] = useState<string[]>([]);
+    const [contacts, setContacts] = useState<SignalContact[]>([]);
+    const [loadingContacts, setLoadingContacts] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
+
+    useEffect(() => {
+        if (!notify || contacts.length > 0) return;
+
+        setLoadingContacts(true);
+        const url = import.meta.env.VITE_API_DOMAIN + "/contacts";
+        axiosClient
+            .get<SignalContact[]>(url)
+            .then((res) => setContacts(res.data))
+            .catch((err) => console.error("Failed to load Signal contacts", err))
+            .finally(() => setLoadingContacts(false));
+    }, [notify, contacts.length]);
+
     async function endTokenSession() {
         toggleSideMenu();
         await authService.logout();
         navigate("/login");
+    }
+
+    function toggleContact(number: string) {
+        setSelectedContacts((prev) =>
+            prev.includes(number) ? prev.filter((n) => n !== number) : [...prev, number]
+        );
+    }
+
+    async function handleAddHabit(e: React.FormEvent) {
+        e.preventDefault();
+        if (!habitName.trim()) return;
+
+        setSubmitting(true);
+        try {
+            await axiosClient.post("/habits", {
+                name: habitName,
+                notify2: notify,
+                signalContactNumbers: notify ? selectedContacts : [],
+            });
+            setHabitName("");
+            setNotify(false);
+            setSelectedContacts([]);
+        } catch (err) {
+            console.error("Failed to add habit", err);
+        } finally {
+            setSubmitting(false);
+        }
     }
 
     return (
@@ -26,50 +72,107 @@ export default function Sidebar() {
                 className="absolute top-3 left-3 z-20 flex items-center justify-center w-10 h-10 rounded-md hover:bg-cyan-500/10 transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-400"
                 aria-label="Toggle menu"
             >
-                <div className="w-6 h-5 flex flex-col justify-between">
+                <div className="relative w-6 h-6">
                     <span
-                        className={`block h-0.5 w-full bg-slate-800 dark:bg-slate-200 rounded transition-all duration-300 ${
-                            sideMenu ? "rotate-45 translate-y-[9px] bg-cyan-400 dark:bg-cyan-400" : ""
+                        className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-0.5 bg-slate-800 dark:bg-slate-200 rounded transition-transform duration-300 ${
+                            sideMenu ? "rotate-135 bg-cyan-400 dark:bg-cyan-400" : "rotate-0"
                         }`}
                     />
                     <span
-                        className={`block h-0.5 w-full bg-slate-800 dark:bg-slate-200 rounded transition-all duration-300 ${
-                            sideMenu ? "opacity-0" : "opacity-100"
-                        }`}
-                    />
-                    <span
-                        className={`block h-0.5 w-full bg-slate-800 dark:bg-slate-200 rounded transition-all duration-300 ${
-                            sideMenu ? "-rotate-45 -translate-y-[9px] bg-cyan-400 dark:bg-cyan-400" : ""
+                        className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-0.5 bg-slate-800 dark:bg-slate-200 rounded transition-transform duration-300 ${
+                            sideMenu ? "rotate-45 bg-cyan-400 dark:bg-cyan-400" : "rotate-90"
                         }`}
                     />
                 </div>
             </button>
             <div
-                className={`absolute top-0 left-0 w-[280px] h-[calc(100vh-72px)] bg-white/90 dark:bg-slate-950/90 backdrop-blur-md border-r border-cyan-500/10 z-10 shadow-2xl transition-[transform,background-color] duration-300 ease-in-out ${
+                className={`absolute top-0 left-0 w-[280px] h-[100vh] bg-white/90 dark:bg-slate-950/90 backdrop-blur-md border-r border-cyan-500/10 z-10 shadow-2xl transition-[transform,background-color] duration-300 ease-in-out overflow-y-auto ${
                     sideMenu ? "translate-x-0" : "-translate-x-full"
                 }`}
             >
                 <div className="pt-20 px-4">
                     <div className="text-[10px] uppercase tracking-[0.15em] text-cyan-600 dark:text-cyan-400/70 font-mono px-4 mb-2">
-                        Navigate
+                        Add Habit
                     </div>
-                    <div className="h-px bg-slate-300 dark:bg-slate-800 mb-2 transition-colors duration-300" />
-                    <ul className="list-none">
-                        {NAV_ITEMS.map((item) => (
-                            <li key={item.label}>
-                                <a
-                                href={item.href}
-                                className="flex items-center px-4 py-3 rounded-md text-sm text-slate-700 dark:text-slate-200 hover:bg-cyan-500/10 hover:text-cyan-600 dark:hover:text-cyan-300 transition-colors duration-150"
-                                >
-                                {item.label}
-                            </a>
-                            </li>
-                            ))}
-                    </ul>
+                    <div className="h-px bg-slate-300 dark:bg-slate-800 mb-3 transition-colors duration-300" />
+
+                    <form onSubmit={handleAddHabit} className="px-4 pb-6 flex flex-col gap-3">
+                        <div className="flex flex-col gap-1">
+                            <label
+                                htmlFor="habit-name"
+                                className="text-xs font-mono uppercase tracking-wide text-slate-500 dark:text-slate-400"
+                            >
+                                Habit name
+                            </label>
+                            <input
+                                id="habit-name"
+                                type="text"
+                                value={habitName}
+                                onChange={(e) => setHabitName(e.target.value)}
+                                placeholder="e.g. Read 20 minutes"
+                                className="w-full px-3 py-2 rounded-md text-sm bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-400"
+                                required
+                            />
+                        </div>
+
+                        <label className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200 cursor-pointer select-none">
+                            <input
+                                type="checkbox"
+                                checked={notify}
+                                onChange={(e) => setNotify(e.target.checked)}
+                                className="w-4 h-4 rounded accent-cyan-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-400"
+                            />
+                            Notify via Signal
+                        </label>
+
+                        {notify && (
+                            <div className="flex flex-col gap-1">
+                                <span className="text-xs font-mono uppercase tracking-wide text-slate-500 dark:text-slate-400">
+                                    Contacts
+                                </span>
+                                <div className="w-full max-h-40 overflow-y-auto rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 divide-y divide-slate-200 dark:divide-slate-800">
+                                    {loadingContacts && (
+                                        <div className="px-3 py-2 text-sm text-slate-400 dark:text-slate-600">
+                                            Loading contacts...
+                                        </div>
+                                    )}
+                                    {!loadingContacts && contacts.length === 0 && (
+                                        <div className="px-3 py-2 text-sm text-slate-400 dark:text-slate-600">
+                                            No contacts found
+                                        </div>
+                                    )}
+                                    {contacts.map((c) => (
+                                        <label
+                                            key={c.number}
+                                            className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 dark:text-slate-200 cursor-pointer select-none hover:bg-cyan-500/10"
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedContacts.includes(c.number)}
+                                                onChange={() => toggleContact(c.number)}
+                                                className="w-4 h-4 rounded accent-cyan-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-400"
+                                            />
+                                            {c.name || c.number}
+                                        </label>
+                                    ))}
+                                </div>
+                                {selectedContacts.length > 0 && (
+                                    <span className="text-xs text-slate-500 dark:text-slate-400">
+                                        {selectedContacts.length} selected
+                                    </span>
+                                )}
+                            </div>
+                        )}
+
+                        <button
+                            type="submit"
+                            disabled={submitting || !habitName.trim()}
+                            className="mt-1 w-full px-3 py-2 rounded-md text-sm font-medium bg-cyan-500/90 hover:bg-cyan-500 text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-400"
+                        >
+                            {submitting ? "Adding..." : "Add habit"}
+                        </button>
+                    </form>
                 </div>
-                <footer className="fixed bottom-0 right-0 p-2 text-sm text-gray-400">
-                    <a onClick={endTokenSession}>Logout</a>
-                </footer>
             </div>
             <div
                 onClick={() => setSideMenu(false)}
