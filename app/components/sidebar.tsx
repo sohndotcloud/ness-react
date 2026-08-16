@@ -28,6 +28,7 @@ export default function Sidebar() {
     const [loadingContacts, setLoadingContacts] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [verified, setVerified] = useState(false);
+    const [message, setMessage] = useState("");
 
     const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -60,9 +61,6 @@ export default function Sidebar() {
             .finally(() => setLoadingContacts(false));
     }, [notify, contacts.length]);
 
-    // Poll every 5 seconds while notify is on and not yet verified,
-    // so the UI flips to the contacts view once the QR code is scanned.
-    // Uses a ref (not just the cleanup fn) so re-renders don't spawn duplicate intervals.
     useEffect(() => {
         if (!notify || verified) {
             if (pollingRef.current) {
@@ -125,6 +123,7 @@ export default function Sidebar() {
                 name: habitName,
                 notify2: notify,
                 signalContactNumbers: notify ? selectedContacts : [],
+                message,
             });
             setHabitName("");
             setNotify(false);
@@ -235,6 +234,28 @@ export default function Sidebar() {
                                                 {selectedContacts.length} selected
                                             </span>
                                         )}
+                                        <div className="flex flex-col gap-1 mt-1">
+                                            <div className="flex items-center justify-between">
+                                                <label
+                                                    htmlFor="notify-message"
+                                                    className="text-xs font-mono uppercase tracking-wide text-slate-500 dark:text-slate-400"
+                                                >
+                                                    Message
+                                                </label>
+                                                <span className="text-[10px] text-slate-400 dark:text-slate-600 font-mono">
+                                                {message.length}/255
+                                            </span>
+                                            </div>
+                                            <textarea
+                                                id="notify-message"
+                                                value={message}
+                                                onChange={(e) => setMessage(e.target.value.slice(0, 255))}
+                                                maxLength={255}
+                                                rows={3}
+                                                placeholder="Optional message to send with the notification"
+                                                className="w-full px-3 py-2 rounded-md text-sm bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-600 resize-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-400"
+                                            />
+                                        </div>
                                     </>
                                 ) : (
                                     <div className="flex flex-col items-center gap-2 py-2">
